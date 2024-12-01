@@ -93,7 +93,7 @@
     - Install and configure kubectl, AWS CLI, and eksctl for cluster
     - Run all Kubernetes commands from the EC2 instance (not from a local machine).
 
-        - Create an IAM Policy with required permissions to interact with the EKS service
+        - Create a custom IAM Policy (say EC2EKSPolicy ) to allow for the creation of the EKS Clusters from the EC2instance using eksctl:
 
         ```
         {
@@ -102,7 +102,7 @@
                 {
                     "Effect": "Allow",
                     "Action": [
-                       "eks:DescribeCluster",
+                        "eks:DescribeCluster",
                         "eks:ListClusters",
                         "eks:CreateCluster",
                         "eks:DeleteCluster",
@@ -110,6 +110,7 @@
                         "eks:UpdateClusterVersion",
                         "eks:ListNodegroups",
                         "eks:DescribeNodegroup",
+                        "eks:TagResource",
                         "ec2:DescribeInstances",
                         "ec2:DescribeSecurityGroups",
                         "ec2:DescribeAvailabilityZones",
@@ -119,15 +120,47 @@
                         "cloudwatch:DescribeAlarms",
                         "logs:DescribeLogGroups",
                         "cloudformation:CreateStack",
-                        "cloudformation:DescribeStacks"
+                        "cloudformation:DescribeStacks",
+                        "cloudformation:DescribeStackEvents"
                     ],
                     "Resource": "*"
                 }
             ]
         }
+        ``` 
+
+        
+        - Create an IAM User for CLI access from the EC2 instance with the following policies (Alternatively could associate all these policies with an IAM Role associated with the EC2 instance): 
+
+            - AmazonEKSClusterPolicy
+            - AmazonEKSServicePolicy
+            - AmazonEKSWorkerNodePolicy
+            - AmazonEC2FullAccess
+            - IAMFullAccess
+            - AWSCloudFormationFullAccess
+            - EC2EKSPolicy (Created Above)
+
+        - Create an access key for the user and create a secret in AWS Secret Manager 
+
+        ```
+        aws secretsmanager create-secret --name my/aws-credentials --secret-string '{"aws_access_key_id":"YOUR_ACCESS_KEY_ID","aws_secret_access_key":"YOUR_SECRET_ACCESS_KEY"}'
+
         ```
 
-        - Create IAM Role with the above policy and attach it to the EC2 instance 
+        - Create a custom IAM policy, and associate it with a role attached to the EC2 instance to fetch the secrets from AWS Secret Manager before configuring the AWS CLI:
+
+        ```
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                "Effect": "Allow",
+                "Action": "secretsmanager:GetSecretValue",
+                "Resource": "*"
+                }
+            ]
+        }
+        ```
 
         - User Data specification for EC2 instance to install kubectl and eksctl, clone the github repo (containing the config file to create the EKS cluster)
 
@@ -150,7 +183,8 @@
         sudo yum install git -y
         sudo git clone https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry.git
 
-        <!-- # Install jq
+        # Install jq
+        sudo yum install -y jq
 
         # Configure the AWS CLI
 
@@ -169,7 +203,10 @@
         aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
         aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
         aws configure set region "$REGION"
-        aws configure set output "json" -->
+        aws configure set output "json"
+
+        # Create the EKS Cluster 
+        eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
 
         ```   
 
