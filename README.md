@@ -93,7 +93,43 @@
     - Install and configure kubectl, AWS CLI, and eksctl for cluster
     - Run all Kubernetes commands from the EC2 instance (not from a local machine).
 
-        - User Data specification for EC2 instance to install AWS CLI, kubectl and eksctl
+        - Create an IAM Policy with required permissions to interact with the EKS service
+
+        ```
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                       "eks:DescribeCluster",
+                        "eks:ListClusters",
+                        "eks:CreateCluster",
+                        "eks:DeleteCluster",
+                        "eks:UpdateClusterConfig",
+                        "eks:UpdateClusterVersion",
+                        "eks:ListNodegroups",
+                        "eks:DescribeNodegroup",
+                        "ec2:DescribeInstances",
+                        "ec2:DescribeSecurityGroups",
+                        "ec2:DescribeAvailabilityZones",
+                        "ec2:DescribeInstanceTypeOfferings",
+                        "ec2:DescribeKeyPairs",
+                        "iam:ListRoles",
+                        "cloudwatch:DescribeAlarms",
+                        "logs:DescribeLogGroups",
+                        "cloudformation:CreateStack",
+                        "cloudformation:DescribeStacks"
+                    ],
+                    "Resource": "*"
+                }
+            ]
+        }
+        ```
+
+        - Create IAM Role with the above policy and attach it to the EC2 instance 
+
+        - User Data specification for EC2 instance to install kubectl and eksctl, clone the github repo (containing the config file to create the EKS cluster)
 
         ```
         #!/bin/bash
@@ -104,9 +140,36 @@
         rm kubectl
 
         # Install eksctl
-        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_amd64.tar.gz"
-        tar -xvzf /tmp/eksctl.tar.gz -C /tmp
+        ARCH=amd64
+        PLATFORM=$(uname -s)_$ARCH
+        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+        tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
         sudo mv /tmp/eksctl /usr/local/bin
+
+        # Install Git
+        sudo yum install git -y
+        sudo git clone https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry.git
+
+        <!-- # Install jq
+
+        # Configure the AWS CLI
+
+        # Fetch AWS credentials from Secrets Manager
+        SECRET_NAME="CLIAccessSecret"  
+        REGION="us-east-1"  
+
+        # Fetch the secret from Secrets Manager using AWS CLI
+        SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --region $REGION --query SecretString --output text)
+
+        # Extract AWS credentials using jq
+        AWS_ACCESS_KEY_ID=$(echo $SECRET_JSON | jq -r '.aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY=$(echo $SECRET_JSON | jq -r '.aws_secret_access_key')
+
+        # Configure AWS CLI with the credentials
+        aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+        aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+        aws configure set region "$REGION"
+        aws configure set output "json" -->
 
         ```   
 
