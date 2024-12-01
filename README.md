@@ -93,53 +93,9 @@
     - Install and configure kubectl, AWS CLI, and eksctl for cluster
     - Run all Kubernetes commands from the EC2 instance (not from a local machine).
 
-        - Create a custom IAM Policy (say EC2EKSPolicy ) to allow for the creation of the EKS Clusters from the EC2instance using eksctl:
-
-        ```
-        {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Effect": "Allow",
-                    "Action": [
-                        "eks:DescribeCluster",
-                        "eks:ListClusters",
-                        "eks:CreateCluster",
-                        "eks:DeleteCluster",
-                        "eks:UpdateClusterConfig",
-                        "eks:UpdateClusterVersion",
-                        "eks:ListNodegroups",
-                        "eks:DescribeNodegroup",
-                        "eks:TagResource",
-                        "ec2:DescribeInstances",
-                        "ec2:DescribeSecurityGroups",
-                        "ec2:DescribeAvailabilityZones",
-                        "ec2:DescribeInstanceTypeOfferings",
-                        "ec2:DescribeKeyPairs",
-                        "iam:ListRoles",
-                        "cloudwatch:DescribeAlarms",
-                        "logs:DescribeLogGroups",
-                        "cloudformation:CreateStack",
-                        "cloudformation:DescribeStacks",
-                        "cloudformation:DescribeStackEvents"
-                    ],
-                    "Resource": "*"
-                }
-            ]
-        }
-        ``` 
-
-        
-        - Create an IAM User for CLI access from the EC2 instance with the following policies (Alternatively could associate all these policies with an IAM Role associated with the EC2 instance): 
-
-            - AmazonEKSClusterPolicy
-            - AmazonEKSServicePolicy
-            - AmazonEKSWorkerNodePolicy
-            - AmazonEC2FullAccess
-            - IAMFullAccess
-            - AWSCloudFormationFullAccess
-            - EC2EKSPolicy (Created Above)
-
+       
+        - Create an IAM User (with full access : AdministratorAccess) for CLI access from the EC2 instance to launch the EKS Cluster  (Alternatively could associate an IAM Role with the same permissions with the EC2 instance): 
+           
         - Create an access key for the user and create a secret in AWS Secret Manager 
 
         ```
