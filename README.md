@@ -94,7 +94,7 @@
     - Run all Kubernetes commands from the EC2 instance (not from a local machine).
 
        
-        - Create an IAM User (with full access : AdministratorAccess) for CLI access from the EC2 instance to launch the EKS Cluster  (Alternatively could associate an IAM Role with the same permissions with the EC2 instance): 
+        - Create an IAM User (with full access : AdministratorAccess) for CLI access from the EC2 instance to launch the EKS Cluster  (Alternatively could associate an IAM Role with the same permissions to the EC2 instance): 
            
         - Create an access key for the user and create a secret in AWS Secret Manager 
 
@@ -124,16 +124,17 @@
         #!/bin/bash
 
         # Install kubectl
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        rm kubectl
+        # kubectl version --client
 
         # Install eksctl
         ARCH=amd64
         PLATFORM=$(uname -s)_$ARCH
-        curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
-        tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+        sudo curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+        sudo tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp
         sudo mv /tmp/eksctl /usr/local/bin
+        # eksctl version
 
         # Install Git
         sudo yum install git -y
@@ -163,6 +164,8 @@
 
         # Create the EKS Cluster 
         eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
+
+        aws eks update-kubeconfig --name openTelemetryCluster --region $REGION
 
         ```   
 
