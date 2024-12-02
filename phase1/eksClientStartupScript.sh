@@ -17,7 +17,5 @@ sudo mv /tmp/eksctl /usr/local/bin
 sudo yum install git -y
 sudo git clone https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry.git
 
-# Create the EKS Cluster 
-eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
 
-aws eks update-kubeconfig --name openTelemetryCluster --region us-east-1
+

@@ -227,6 +227,15 @@
         aws ec2 run-instances --image-id ami-0166fe664262f664c --instance-type t2.medium --key-name SSH1 --security-group-ids sg-013069d9f0783aca5 --iam-instance-profile Name=EKSClientRole --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=EKSClient}]" --count 1 --region us-east-1 --user-data  file://./phase1/eksClientStartupScript.sh
         ```   
 
+        - SSH into the EC2 instance 
+
+        - Create the EKS Cluster using the following command 
+
+        ```
+        eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
+        ```
+        
+
 - Validate the deployment:
     - Ensure all pods and services are running as expected in the otel-demo namespace.
     - Access application endpoints through port-forwarding or service
@@ -236,7 +245,15 @@
 #### Deliverables
  
 - Screenshot of the EKS cluster configuration details (number of nodes, instance type, ).
+
+    ![Cluster Config - 1](/screenshots/phase1/cluster-config-1.png)
+
+    ![Cluster Config - 2](/screenshots/phase1/cluster-config-2.png)
+
 - Screenshot of the EC2 instance used as the EKS client (instance type, storage, ).
+
+    ![EKS Client](/screenshots/phase1/eks-client.png)
+
 - Screenshot of kubectl get all -n otel-demo showing the status of pods, services, and deployments.
 - Screenshot of logs from key application pods to confirm successful
 - Exported Kubernetes manifest (opentelemetry-demo.yaml), if
