@@ -93,80 +93,138 @@
     - Install and configure kubectl, AWS CLI, and eksctl for cluster
     - Run all Kubernetes commands from the EC2 instance (not from a local machine).
 
-       
-        - Create an IAM User (with full access : AdministratorAccess) for CLI access from the EC2 instance to launch the EKS Cluster  (Alternatively could associate an IAM Role with the same permissions to the EC2 instance): 
-           
-        - Create an access key for the user and create a secret in AWS Secret Manager 
-
-        ```
-        aws secretsmanager create-secret --name my/aws-credentials --secret-string '{"aws_access_key_id":"YOUR_ACCESS_KEY_ID","aws_secret_access_key":"YOUR_SECRET_ACCESS_KEY"}'
-
-        ```
-
-        - Create a custom IAM policy, and associate it with a role attached to the EC2 instance to fetch the secrets from AWS Secret Manager before configuring the AWS CLI:
+        - Create an IAM policy (say, EksAllAccess) to provide complete access to EKS Services
 
         ```
         {
             "Version": "2012-10-17",
             "Statement": [
                 {
-                "Effect": "Allow",
-                "Action": "secretsmanager:GetSecretValue",
-                "Resource": "*"
+                    "Effect": "Allow",
+                    "Action": "eks:*",
+                    "Resource": "*"
+                },
+                {
+                    "Action": [
+                        "ssm:GetParameter",
+                        "ssm:GetParameters"
+                    ],
+                    "Resource": [
+                        "arn:aws:ssm:*:<account_id>:parameter/aws/*",
+                        "arn:aws:ssm:*::parameter/aws/*"
+                    ],
+                    "Effect": "Allow"
+                },
+                {
+                    "Action": [
+                    "kms:CreateGrant",
+                    "kms:DescribeKey"
+                    ],
+                    "Resource": "*",
+                    "Effect": "Allow"
+                },
+                {
+                    "Action": [
+                    "logs:PutRetentionPolicy"
+                    ],
+                    "Resource": "*",
+                    "Effect": "Allow"
+                }        
+            ]
+        }
+        ```
+
+        - Create an IAM policy (say, IamLimitedAccess) to provided limited access to AWS IAM
+
+        ```
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "iam:CreateInstanceProfile",
+                        "iam:DeleteInstanceProfile",
+                        "iam:GetInstanceProfile",
+                        "iam:RemoveRoleFromInstanceProfile",
+                        "iam:GetRole",
+                        "iam:CreateRole",
+                        "iam:DeleteRole",
+                        "iam:AttachRolePolicy",
+                        "iam:PutRolePolicy",
+                        "iam:UpdateAssumeRolePolicy",
+                        "iam:AddRoleToInstanceProfile",
+                        "iam:ListInstanceProfilesForRole",
+                        "iam:PassRole",
+                        "iam:DetachRolePolicy",
+                        "iam:DeleteRolePolicy",
+                        "iam:GetRolePolicy",
+                        "iam:GetOpenIDConnectProvider",
+                        "iam:CreateOpenIDConnectProvider",
+                        "iam:DeleteOpenIDConnectProvider",
+                        "iam:TagOpenIDConnectProvider",
+                        "iam:ListAttachedRolePolicies",
+                        "iam:TagRole",
+                        "iam:UntagRole",
+                        "iam:GetPolicy",
+                        "iam:CreatePolicy",
+                        "iam:DeletePolicy",
+                        "iam:ListPolicyVersions"
+                    ],
+                    "Resource": [
+                        "arn:aws:iam::<account_id>:instance-profile/eksctl-*",
+                        "arn:aws:iam::<account_id>:role/eksctl-*",
+                        "arn:aws:iam::<account_id>:policy/eksctl-*",
+                        "arn:aws:iam::<account_id>:oidc-provider/*",
+                        "arn:aws:iam::<account_id>:role/aws-service-role/eks-nodegroup.amazonaws.com/AWSServiceRoleForAmazonEKSNodegroup",
+                        "arn:aws:iam::<account_id>:role/eksctl-managed-*"
+                    ]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "iam:GetRole",
+                        "iam:GetUser"
+                    ],
+                    "Resource": [
+                        "arn:aws:iam::<account_id>:role/*",
+                        "arn:aws:iam::<account_id>:user/*"
+                    ]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "iam:CreateServiceLinkedRole"
+                    ],
+                    "Resource": "*",
+                    "Condition": {
+                        "StringEquals": {
+                            "iam:AWSServiceName": [
+                                "eks.amazonaws.com",
+                                "eks-nodegroup.amazonaws.com",
+                                "eks-fargate.amazonaws.com"
+                            ]
+                        }
+                    }
                 }
             ]
         }
         ```
 
-        - User Data specification for EC2 instance to install kubectl and eksctl, clone the github repo (containing the config file to create the EKS cluster)
+       
+        - Create an IAM role (say, EKSClientRole) with the following policies, and attach it to the EC2 instance, serving as the EKS client 
+
+            - IamLimitedAccess
+            - EksAllAccess
+            - AWSCloudFormationFullAccess (AWS Managed Policy)
+            - AmazonEC2FullAccess (AWS Managed Policy)
+
+        - Create a security group for the EC2 instance allowing inbound SSH traffic
+
+        - Launch the EC2 Instance (EKS Client), with the following configs
 
         ```
-        #!/bin/bash
-
-        # Install kubectl
-        sudo curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        # kubectl version --client
-
-        # Install eksctl
-        ARCH=amd64
-        PLATFORM=$(uname -s)_$ARCH
-        sudo curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
-        sudo tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp
-        sudo mv /tmp/eksctl /usr/local/bin
-        # eksctl version
-
-        # Install Git
-        sudo yum install git -y
-        sudo git clone https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry.git
-
-        # Install jq
-        sudo yum install -y jq
-
-        # Configure the AWS CLI
-
-        # Fetch AWS credentials from Secrets Manager
-        SECRET_NAME="CLIAccessSecret"  
-        REGION="us-east-1"  
-
-        # Fetch the secret from Secrets Manager using AWS CLI
-        SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --region $REGION --query SecretString --output text)
-
-        # Extract AWS credentials using jq
-        AWS_ACCESS_KEY_ID=$(echo $SECRET_JSON | jq -r '.aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY=$(echo $SECRET_JSON | jq -r '.aws_secret_access_key')
-
-        # Configure AWS CLI with the credentials
-        aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-        aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-        aws configure set region "$REGION"
-        aws configure set output "json"
-
-        # Create the EKS Cluster 
-        eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
-
-        aws eks update-kubeconfig --name openTelemetryCluster --region $REGION
-
+        aws ec2 run-instances --image-id ami-0166fe664262f664c --instance-type t2.medium --key-name SSH1 --security-group-ids sg-013069d9f0783aca5 --iam-instance-profile Name=EKSClientRole --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=EKSClient}]" --count 1 --region us-east-1 --user-data  file://./phase1/eksClientStartupScript.sh
         ```   
 
 - Validate the deployment:
