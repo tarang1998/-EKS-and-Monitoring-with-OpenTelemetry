@@ -251,23 +251,25 @@
 
     - Access application endpoints through port-forwarding or service
 
-        - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
+        - Accessing Grafana
 
-        ```
-        kubectl port-forward svc/opentelemetry-demo-grafana 8080:80 -n otel-demo
+            - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
 
-        ```
+            ```
+            kubectl port-forward svc/opentelemetry-demo-grafana 8080:80 -n otel-demo
 
-        - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
+            ```
 
-        ```
-        ssh -i "SSH1.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
-        ```
+            - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
 
-        - Access the application from the local machine 
-        ```
-        http://localhost:8080       
-        ```
+            ```
+            ssh -i "SSH1.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
+            ```
+
+            - Access the application from the local machine 
+            ```
+            http://localhost:8080       
+            ```
 
     - Collect the cluster details, including node and pod
 
