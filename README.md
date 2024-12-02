@@ -235,29 +235,110 @@
         eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
         ```
         
+        - Deploy the application to the EKS Cluster
+
+        ```
+        kubectl apply -f EKS-and-Monitoring-with-OpenTelemetry/phase1/opentelemetry-demo.yaml
+        ```
 
 - Validate the deployment:
+
     - Ensure all pods and services are running as expected in the otel-demo namespace.
+
+        ```
+        kubectl get all -n otel-demo
+        ```
+
     - Access application endpoints through port-forwarding or service
+
+        - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
+
+        ```
+        kubectl port-forward svc/opentelemetry-demo-grafana 8080:80 -n otel-demo
+
+        ```
+
+        - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
+
+        ```
+        ssh -i "SSH1.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
+        ```
+
+        - Access the application from the local machine 
+        ```
+        http://localhost:8080       
+        ```
+
     - Collect the cluster details, including node and pod
+
+        ```
+        kubectl get nodes -o wide
+        kubectl describe nodes
+        kubectl get pods -n otel-demo
+        ```
+
     - Do not delete the EKS cluster unless explicitly
 
 #### Deliverables
  
 - Screenshot of the EKS cluster configuration details (number of nodes, instance type, ).
 
-    ![Cluster Config - 1](/screenshots/phase1/cluster-config-1.png)
+    ![Cluster Config](/screenshots/phase1/cluster-config.png)
 
-    ![Cluster Config - 2](/screenshots/phase1/cluster-config-2.png)
+    ![Cluster Node Group Config](/screenshots/phase1/cluster-node-group-config.png)
 
 - Screenshot of the EC2 instance used as the EKS client (instance type, storage, ).
 
     ![EKS Client](/screenshots/phase1/eks-client.png)
 
 - Screenshot of kubectl get all -n otel-demo showing the status of pods, services, and deployments.
+
+    ![Kubectl Get All](/screenshots/phase1/kubectl-get-all.png)
+
 - Screenshot of logs from key application pods to confirm successful
-- Exported Kubernetes manifest (opentelemetry-demo.yaml), if
+    
+    ```
+    kubectl logs <pod-name> -n otel-demo
+    ```
+
+    - To Retrieve the last 75 log messages from the opentelemetry-demo-grafana-69b6bd5dd4-bvs5k pod
+
+    ```
+    kubectl logs opentelemetry-demo-grafana-69b6bd5dd4-bvs5k -n otel-demo --tail=75
+    ``` 
+
+    ![Grafana Pod Log](/screenshots/phase1/grafana-pod-log.png)
+
+    - Similarly, retrieving the last 75 log messages from the opentelemetry-demo-otelcol-5c757cfcf-4vkfp and opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 pods
+
+    ```
+    kubectl logs opentelemetry-demo-otelcol-5c757cfcf-4vkfp -n otel-demo --tail=75
+    kubectl logs opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 -n otel-demo --tail=75
+    ``` 
+
+    ![Prometheus Server Pod Log](/screenshots/phase1/prometheus-server-pod.png)
+
+- Exported Kubernetes manifest (opentelemetry-demo.yaml).
+
 - Screenshot of accessible application follow the project documentation link.
+
+    - Accessing Grafana 
+
+        - Port forwarding on the EKS Client to the service running Kubernetes
+
+        ![Kubectl port forwarding - Grafana](/screenshots/phase1/kubectl-port-forwarding-grafana.png)
+
+        - Port forwarding from Local Machine to remote EC2 instance (EKS Client)
+
+        ![Local port forwarding - Grafana](/screenshots/phase1/local-port-forwarding-grafana.png)
+
+        - Accessing the application Locally 
+
+        
+
+
+
+
  
 
 
