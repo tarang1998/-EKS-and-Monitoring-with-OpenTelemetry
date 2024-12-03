@@ -219,6 +219,9 @@
             - AWSCloudFormationFullAccess (AWS Managed Policy)
             - AmazonEC2FullAccess (AWS Managed Policy)
 
+            ![EKSClientRole](/screenshots/phase1/eksclientRole-IAMRole.png)
+
+
         - Create a security group for the EC2 instance allowing inbound SSH traffic
 
         - Launch the EC2 Instance (EKS Client), with the following configs

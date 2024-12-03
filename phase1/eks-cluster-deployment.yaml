@@ -12,7 +12,7 @@ iamIdentityMappings:
       - system:masters
     username: admin
     noDuplicateARNs: true
-  - arn: arn:aws:iam::448049797968:root  
+  - arn: arn:aws:iam::448049797968:user/root  
     groups:
       - system:masters 
     username: root
