@@ -235,14 +235,26 @@
         - Create the EKS Cluster using the following command 
 
         ```
-        eksctl create cluster -f  EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
+        eksctl create cluster -f  /EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
         ```
+
+        ![EKS Cluster creation](/screenshots/phase1/eksctl-cluster-creation.png)
+
+        - On occurrence of the warning while trying to access the cluster details from the AWS console as a root user 
+
+            > Your current IAM principal doesn’t have access to Kubernetes objects on this cluster. This may be due to the current user or role not having Kubernetes RBAC permissions to describe cluster resources or not having an entry in the cluster’s auth config map. Learn more 
+
+            - Check the following [article](https://stackoverflow.com/questions/70787520/your-current-user-or-role-does-not-have-access-to-kubernetes-objects-on-this-eks)
+
         
         - Deploy the application to the EKS Cluster
 
         ```
         kubectl apply -f EKS-and-Monitoring-with-OpenTelemetry/phase1/opentelemetry-demo.yaml
         ```
+
+        ![Kubectl Config](/screenshots/phase1/kubectl-configuration.png)
+
 
 - Validate the deployment:
 
@@ -259,28 +271,62 @@
             - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
 
             ```
-            kubectl port-forward svc/opentelemetry-demo-grafana 8080:80 -n otel-demo
+            kubectl port-forward svc/opentelemetry-demo-grafana 3000:80 -n otel-demo
 
             ```
 
             - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
 
             ```
-            ssh -i "SSH1.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
+            ssh -i "SSH1.pem" -L 3000:127.0.0.1:3000 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
             ```
 
             - Access the application from the local machine 
             ```
-            http://localhost:8080       
+            http://localhost:3000       
             ```
+
+        - Accessing Prometheus
+
+            - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
+
+            ```
+            kubectl port-forward svc/opentelemetry-demo-prometheus-server 9090:9090 -n otel-demo
+
+            ```
+
+            - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
+
+            ```
+            ssh -i "SSH1.pem" -L 9090:127.0.0.1:9090 ec2-user@ec2-54-162-13-172.compute-1.amazonaws.com
+            ```
+
+            - Access the application from the local machine 
+            ```
+            http://localhost:9090       
+            ```
+
 
     - Collect the cluster details, including node and pod
 
         ```
         kubectl get nodes -o wide
-        kubectl describe nodes
+        ```
+            
+        ![Kubectl get nodes](/screenshots/phase1/kubectl-get-nodes.png)
+
+
+        ```
         kubectl get pods -n otel-demo
         ```
+
+        ![Kubectl get pods](/screenshots/phase1/kubectl-get-pods.png)
+
+
+        ```
+        kubectl describe nodes
+        ```
+
 
     - Do not delete the EKS cluster unless explicitly
 
@@ -306,7 +352,7 @@
     kubectl logs <pod-name> -n otel-demo
     ```
 
-    - To Retrieve the last 75 log messages from the opentelemetry-demo-grafana-69b6bd5dd4-bvs5k pod
+    - Eg. To Retrieve the last 75 log messages from the opentelemetry-demo-grafana-69b6bd5dd4-bvs5k pod
 
     ```
     kubectl logs opentelemetry-demo-grafana-69b6bd5dd4-bvs5k -n otel-demo --tail=75
@@ -314,7 +360,7 @@
 
     ![Grafana Pod Log](/screenshots/phase1/grafana-pod-log.png)
 
-    - Similarly, retrieving the last 75 log messages from the opentelemetry-demo-otelcol-5c757cfcf-4vkfp and opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 pods
+    - Eg. Similarly, retrieving the last 75 log messages from the opentelemetry-demo-otelcol-5c757cfcf-4vkfp and opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 pods
 
     ```
     kubectl logs opentelemetry-demo-otelcol-5c757cfcf-4vkfp -n otel-demo --tail=75
@@ -338,6 +384,25 @@
         ![Local port forwarding - Grafana](/screenshots/phase1/local-port-forwarding-grafana.png)
 
         - Accessing the application Locally 
+
+        ![Grafana local access](/screenshots/phase1/grafana-local-access.png)
+
+    - Accessing Prometheus 
+
+        - Port forwarding on the EKS Client to the service running Kubernetes
+
+        ![Kubectl port forwarding - Grafana](/screenshots/phase1/kubectl-port-forwarding-prometheus.png)
+
+        - Port forwarding from Local Machine to remote EC2 instance (EKS Client)
+
+        ![Local port forwarding - Grafana](/screenshots/phase1/local-port-forwarding-prometheus.png)
+
+        - Accessing the application Locally 
+
+        ![Grafana local access](/screenshots/phase1/prometheus-local-access.png)
+
+
+
 
         
 
