@@ -371,6 +371,8 @@
 
 - Exported Kubernetes manifest (opentelemetry-demo.yaml).
 
+    - The yaml file containing the kubernetes configurations : [opentelemetry-demo.yaml](/phase1/opentelemetry-demo.yaml)
+
 - Screenshot of accessible application follow the project documentation link.
 
     - Accessing Grafana 
