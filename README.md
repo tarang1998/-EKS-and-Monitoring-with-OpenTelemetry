@@ -266,25 +266,51 @@
 
     - Access application endpoints through port-forwarding or service
 
-        - Accessing Grafana
+        - Accessing the Webstore
 
             - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
 
             ```
-            kubectl port-forward svc/opentelemetry-demo-grafana 3000:80 -n otel-demo
-
+           $ kubectl port-forward svc/opentelemetry-demo-frontendproxy 8080:8080
             ```
 
             - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
 
             ```
-            ssh -i "SSH1.pem" -L 3000:127.0.0.1:3000 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
+            ssh -i "SSH1.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-3-86-28-24.compute-1.amazonaws.com
             ```
 
             - Access the application from the local machine 
             ```
-            http://localhost:3000       
+            http://localhost:8080    
+            http://localhost:8080/jaeger/ui/search
+            http://localhost:8080/loadgen/   
+
+            //Not able to access these - Need to figure it out
+            Grafana: http://localhost:8080/grafana/
+            Flagd configurator UI: http://localhost:8080/feature
+
             ```
+
+        - Accessing Grafana 
+
+            - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
+
+            ```
+            kubectl port-forward svc/opentelemetry-demo-grafana 8000:80 -n otel-demo
+            ```
+
+            - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
+
+            ```
+            ssh -i "SSH1.pem" -L 8000:127.0.0.1:8000 ec2-user@ec2-54-162-13-172.compute-1.amazonaws.com
+            ```
+
+            - Access the application from the local machine 
+            ```
+            http://localhost:8000/grafana       
+            ```
+
 
         - Accessing Prometheus
 
@@ -344,14 +370,26 @@
 
 - Screenshot of kubectl get all -n otel-demo showing the status of pods, services, and deployments.
 
-    ![Kubectl Get All](/screenshots/phase1/kubectl-get-all.png)
+    ![Kubectl Get All Namespace otel-demo](/screenshots/phase1/kubectl-get-all-n-otel.png)
+
+    ![Kubectl Get All](/screenshots/phase1/kubectlgetall.png)
+
 
 - Screenshot of logs from key application pods to confirm successful
     
     ```
+    kubectl log <pod-name>
     kubectl logs <pod-name> -n otel-demo
     ```
 
+    - Retrieving log messages from the opentelemetry-demo-frontendproxy-74f988cfb4-vtf4x pod
+
+    ```
+    kubectl logs opentelemetry-demo-frontendproxy-74f988cfb4-vtf4x --tail=50
+    ```
+
+    ![Frontend Proxy Pod Log](/screenshots/phase1/kubectl-log-frontendproxy.png)
+    
     - Eg. To Retrieve the last 75 log messages from the opentelemetry-demo-grafana-69b6bd5dd4-bvs5k pod
 
     ```
@@ -360,10 +398,9 @@
 
     ![Grafana Pod Log](/screenshots/phase1/grafana-pod-log.png)
 
-    - Eg. Similarly, retrieving the last 75 log messages from the opentelemetry-demo-otelcol-5c757cfcf-4vkfp and opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 pods
+    - Eg. Similarly, retrieving the last 75 log messages from opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 pod
 
     ```
-    kubectl logs opentelemetry-demo-otelcol-5c757cfcf-4vkfp -n otel-demo --tail=75
     kubectl logs opentelemetry-demo-prometheus-server-57cd8f9d46-qnd27 -n otel-demo --tail=75
     ``` 
 
@@ -375,19 +412,25 @@
 
 - Screenshot of accessible application follow the project documentation link.
 
-    - Accessing Grafana 
+    - Accessing Webstore 
 
         - Port forwarding on the EKS Client to the service running Kubernetes
 
-        ![Kubectl port forwarding - Grafana](/screenshots/phase1/kubectl-port-forwarding-grafana.png)
+        ![Kubectl port forwarding - Frontend Proxy](/screenshots/phase1/kubectl-port-forwarding-frontend.png)
 
         - Port forwarding from Local Machine to remote EC2 instance (EKS Client)
 
-        ![Local port forwarding - Grafana](/screenshots/phase1/local-port-forwarding-grafana.png)
+        ![Local port forwarding - FrontendAceess](/screenshots/phase1/local-portforwarding-frontend-access.png)
 
         - Accessing the application Locally 
 
+        ![Webstore local access](/screenshots/phase1/webstore-local-access.png)
+
         ![Grafana local access](/screenshots/phase1/grafana-local-access.png)
+
+        ![LoadGen local access](/screenshots/phase1/loadgen-local-access.png)
+
+        ![Jaeger UI Local access](/screenshots/phase1/jaeger-ui-local-access-kubectl.png)
 
     - Accessing Prometheus 
 
