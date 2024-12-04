@@ -250,7 +250,7 @@
         - Deploy the application to the EKS Cluster
 
         ```
-        kubectl apply -f EKS-and-Monitoring-with-OpenTelemetry/phase1/opentelemetry-demo.yaml
+        kubectl apply -f /EKS-and-Monitoring-with-OpenTelemetry/phase1/opentelemetry-demo.yaml
         ```
 
         ![Kubectl Config](/screenshots/phase1/kubectl-configuration.png)
@@ -271,7 +271,7 @@
             - Forward a local port on the EKS Client to a port on a service running within a Kubernetes cluster
 
             ```
-           $ kubectl port-forward svc/opentelemetry-demo-frontendproxy 8080:8080
+                kubectl port-forward svc/opentelemetry-demo-frontendproxy 8080:8080
             ```
 
             - Sets up a local port forwarding from your local machine to the remote EC2 instance (EKS client), to securely access a service running on that EC2 instance.
@@ -286,8 +286,6 @@
             http://localhost:8080/jaeger/ui/search
             http://localhost:8080/loadgen/   
 
-            //Not able to access these - Need to figure it out
-            Grafana: http://localhost:8080/grafana/
             Flagd configurator UI: http://localhost:8080/feature
 
             ```
@@ -355,6 +353,10 @@
 
 
     - Do not delete the EKS cluster unless explicitly
+
+    ```
+    eksctl delete cluster -f  /EKS-and-Monitoring-with-OpenTelemetry/phase1/eks-cluster-deployment.yaml
+    ```
 
 #### Deliverables
  
@@ -426,25 +428,38 @@
 
         ![Webstore local access](/screenshots/phase1/webstore-local-access.png)
 
-        ![Grafana local access](/screenshots/phase1/grafana-local-access.png)
-
         ![LoadGen local access](/screenshots/phase1/loadgen-local-access.png)
 
         ![Jaeger UI Local access](/screenshots/phase1/jaeger-ui-local-access-kubectl.png)
+
+    - Accessing Grafana 
+
+        - Port forwarding on the EKS Client to the service running Kubernetes
+
+        ![Kubectl port forwarding - Grafan](/screenshots/phase1/kubectl-port-forwarding-grafana.png)
+
+        - Port forwarding from Local Machine to remote EC2 instance (EKS Client)
+
+        ![Local port forwarding - FrontendAceess](/screenshots/phase1/local-port-forwarding-grafana.png)
+
+        - Accessing the application Locally 
+
+        ![Grafana local access](/screenshots/phase1/grafana-local-access.png)
+
 
     - Accessing Prometheus 
 
         - Port forwarding on the EKS Client to the service running Kubernetes
 
-        ![Kubectl port forwarding - Grafana](/screenshots/phase1/kubectl-port-forwarding-prometheus.png)
+        ![Kubectl port forwarding - Prometheus](/screenshots/phase1/kubectl-port-forwarding-prometheus.png)
 
         - Port forwarding from Local Machine to remote EC2 instance (EKS Client)
 
-        ![Local port forwarding - Grafana](/screenshots/phase1/local-port-forwarding-prometheus.png)
+        ![Local port forwarding - Prometheus](/screenshots/phase1/local-port-forwarding-prometheus.png)
 
         - Accessing the application Locally 
 
-        ![Grafana local access](/screenshots/phase1/prometheus-local-access.png)
+        ![Prometheus local access](/screenshots/phase1/prometheus-local-access.png)
 
 
 
