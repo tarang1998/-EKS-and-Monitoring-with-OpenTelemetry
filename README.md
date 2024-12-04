@@ -462,6 +462,31 @@
         ![Prometheus local access](/screenshots/phase1/prometheus-local-access.png)
 
 
+## Phase 2: YAML Splitting and Modular Deployment
+
+### Objective: 
+
+Deploy the application by creating and organizing split YAML files, applying them either individually or recursively, and validating their functionality. Splitting the YAML file is crucial because if any service or pod is down, the corresponding YAML file can be reapplied to make it functional without affecting others. This approach simplifies debugging and deployment management.
+
+### Tasks
+
+- Create folders for resource types to organize the split YAML files by resource type (e.g., ConfigMaps, Secrets, Deployments, Services). Ensure the folder structure is logical and reflects the Kubernetes resources being deployed.
+- Apply resources either individually or recursively:
+- Individually apply each file to ensure resources deploy successfully before moving to the
+- Alternatively, apply all files recursively from the root folder containing the organized files to deploy everything at
+- Validate resource deployment by checking the status of pods, services, and Debug any issues by reviewing pod logs or describing problematic resources.
+- Compress the organized folder of split YAML files into a ZIP file and include it as part of the
+ 
+### Deliverables
+- Screenshots of the created folder structure containing the split YAML
+- Screenshots showing successful deployment of each resource (individually or recursively).
+- Screenshots showing all resources running successfully, including pods, services, and
+- Logs or screenshots verifying the initialization and proper functioning of application
+- A ZIP file containing the organized and split YAML
+- A short report explaining the purpose of each resource, steps followed during deployment, and resolutions to any challenges Note : Manage the namespaces properly while deploying the yaml files
+ 
+
+
 
 
         
