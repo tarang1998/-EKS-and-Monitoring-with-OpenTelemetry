@@ -473,7 +473,18 @@ Deploy the application by creating and organizing split YAML files, applying the
 
 - A short report explaining the purpose of each resource, steps followed during deployment, and resolutions to any challenges Note : Manage the namespaces properly while deploying the yaml files
 
+    - OpenSearch
 
+        - The resources provided for this service include a PodDisruptionBudget, ConfigMap, two Services, and a StatefulSet.
+        - PodDisruptionBudget ensures OpenSearch is highly available during activities like scaling or updates by defining the minimum no of pods that must be available
+        - The configMap contains the OpenSearch configuration file defining essential settings for the Opensearch cluster.
+        - The ClusterIP service provides internal access to OpenSearch
+        - Headless Service ??
+        - Stateful Set ??
+
+    - Jaeger
+
+        - 
  
 
 
