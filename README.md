@@ -398,16 +398,55 @@ Deploy the application by creating and organizing split YAML files, applying the
 ### Tasks
 
 - Create folders for resource types to organize the split YAML files by resource type (e.g., ConfigMaps, Secrets, Deployments, Services). Ensure the folder structure is logical and reflects the Kubernetes resources being deployed.
+
 - Apply resources either individually or recursively:
-- Individually apply each file to ensure resources deploy successfully.
-- Alternatively, apply all files recursively from the root folder containing the organized files to deploy everything at
+    - Individually apply each file to ensure resources deploy successfully.
+    - Alternatively, apply all files recursively from the root folder containing the organized files to deploy everything.
+
+        - SSH into the instance and move to the following path : EKS-and-Monitoring-with-OpenTelemetry/phase2/deployment
+
+        - Deploy the namespace.yaml file 
+
+        ```
+        kubectl apply -f namespace.yaml
+        ```
+
+        - Apply all the resources recursively
+
+        ```
+        kubectl apply -f ./open-telemetry --recursive --namespace otel-demo
+        ```
 - Validate resource deployment by checking the status of pods, services, and Debug any issues by reviewing pod logs or describing problematic resources.
+
+    ```
+    kubectl get all -n otel-demo
+    ```
+
 - Compress the organized folder of split YAML files into a ZIP file
  
 ### Deliverables
 - Screenshots of the created folder structure containing the split YAML
+
+    ![Folder Structure 1 ](/screenshots/phase2/folderStructure1.png)
+
+    ![Folder Structure 2 ](/screenshots/phase2/folderStructure2.png)
+
+    ![Folder Structure 3 ](/screenshots/phase2/folderStructure3.png)
+
+    - Folder Structure containing the split yaml file : [link](/phase2/treeStructure.txt)
+
+
 - Screenshots showing successful deployment of each resource (individually or recursively).
-- Screenshots showing all resources running successfully, including pods, services, and
+
+    ![Namespace deployment](/screenshots/phase2/kubectl-namespace-deployment.png)
+
+    ![Recursive deployment](/screenshots/phase2/kubectl-recursive-deployment.png)
+
+- Screenshots showing all resources running successfully, including pods, services.
+
+    ![Kubectl get all](/screenshots/phase2/kubectl-get-all-n-otel-demo.png)
+
+    
 - Logs or screenshots verifying the initialization and proper functioning of application
 - A ZIP file containing the organized and split YAML
 - A short report explaining the purpose of each resource, steps followed during deployment, and resolutions to any challenges Note : Manage the namespaces properly while deploying the yaml files
@@ -415,8 +454,6 @@ Deploy the application by creating and organizing split YAML files, applying the
 
 
 
-kubectl get all --all-namespaces
-kubectl delete all --all --all-namespaces
         
 
 
