@@ -402,7 +402,7 @@ Deploy the application by creating and organizing split YAML files, applying the
 - Individually apply each file to ensure resources deploy successfully.
 - Alternatively, apply all files recursively from the root folder containing the organized files to deploy everything at
 - Validate resource deployment by checking the status of pods, services, and Debug any issues by reviewing pod logs or describing problematic resources.
-- Compress the organized folder of split YAML files into a ZIP file and include it as part of the
+- Compress the organized folder of split YAML files into a ZIP file
  
 ### Deliverables
 - Screenshots of the created folder structure containing the split YAML
@@ -415,7 +415,8 @@ Deploy the application by creating and organizing split YAML files, applying the
 
 
 
-
+kubectl get all --all-namespaces
+kubectl delete all --all --all-namespaces
         
 
 
