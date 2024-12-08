@@ -30,7 +30,7 @@ spec:
       containers:
         - name: accountingservice
           image: 'ghcr.io/open-telemetry/demo:1.12.0-accountingservice'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: OTEL_SERVICE_NAME
               valueFrom:
