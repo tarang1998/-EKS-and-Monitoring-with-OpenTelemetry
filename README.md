@@ -446,10 +446,34 @@ Deploy the application by creating and organizing split YAML files, applying the
 
     ![Kubectl get all](/screenshots/phase2/kubectl-get-all-n-otel-demo.png)
 
-    
 - Logs or screenshots verifying the initialization and proper functioning of application
+
+    ![WebStore Access](/screenshots/phase2/web-store-access.png)
+
+    ![Grafana](/screenshots/phase2/grafana.png)
+
+    ![LoadGen](/screenshots/phase2/loadgen.png)
+
+    ![Jaeger UI](/screenshots/phase2/jaeger-ui.png)
+
+    ![Flag d](/screenshots/phase2/flagd.png)
+
+    - Frontend-proxy pod logs 
+
+    ![Frontend-proxy pod logs](/screenshots/phase2/frontend-proxy-logs.png)
+
+    - Grafana pod log
+
+    ![Grafana pod logs](/screenshots/phase2/grafana-pod-log.png)
+
+
 - A ZIP file containing the organized and split YAML
+
+    - Link to zip file : [zip file](/phase2/deployment.zip)
+
 - A short report explaining the purpose of each resource, steps followed during deployment, and resolutions to any challenges Note : Manage the namespaces properly while deploying the yaml files
+
+
  
 
 
