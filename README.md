@@ -330,37 +330,78 @@
     ![Kubectl Get All Namespace otel-demo](/screenshots/phase1/kubectl-get-all-n-otel-1.png)
 
 
-- Screenshot of logs from key application pods to confirm successful
+- Screenshot of logs from key application pods to confirm success
     
     ```
-    kubectl log <pod-name>
     kubectl logs <pod-name> -n otel-demo
     ```
 
-    - Retrieving log messages from the frontendproxy pod
 
-    ```
-    kubectl logs <front-end-proxy pod name> --tail=50 -n otel-demo
-    ```
+    - Key Components 
 
-    ![Frontend Proxy Pod Log](/screenshots/phase1/kubectl-log-frontendproxy.png)
+        - Accounting Service Pod Logs
+
+        ![Accounting Service Pod Logs](/screenshots/phase1/accounting-service-pod-logs.png)
+
+        - Add Service Pod Logs 
+
+        ![Ad Service Pod Logs](/screenshots/phase1/ad-service-pod-logs.png) 
+
+        - Cart Service Pod Logs
+
+        ![Cart Service Pod Logs](/screenshots/phase1/cart-service-pod-logs.png)
+
+        - Checkout Service Pod Logs
+
+        ![Checkout Service Pod Logs](/screenshots/phase1/checkout-service-pod-logs.png)
+
+        - Currency Services ???
+
+        - Email Service 
+
+        ![Email Service Pod Logs](/screenshots/phase1/email-service-pod-logs.png)
+
+        - Fraud Detection Service 
+
+        ![Fraud detection Service Pod Logs](/screenshots/phase1/fraud-detection-service-pod-logs.png)
+
+        - FrontEnd Proxy Pod Log
+
+        ![Frontend Proxy Pod Log](/screenshots/phase1/kubectl-log-frontendproxy.png)
+
+        - Front End Pod Log ??
+
+        - Image Service Pod Log
+
+        ![Image Service Pod Log](/screenshots/phase1/image-service-pod-log.png)
+
+
+
+
+    - Dependent Services 
+
+        - Flagd pod logs
+
+        ![FlagD pod log](/screenshots/phase1/flag-d-pod-log.png)
+
+
+
+    - Telemetry Components 
+
+        - Grafana Pod logs
+
+        ```
+        kubectl logs <grafana-pod-id> -n otel-demo --tail=50
+        ``` 
+
+        ![Grafana Pod Log](/screenshots/phase1/grafana-pod-log.png)
+
+
+        - Jaeger Pod logs
+
+        ![Jaeger Pod Log](/screenshots/phase1/jaeger-ui-pod-log.png)
+
     
-    - Retrieving the last 50 log messages from the grafana pod
-
-    ```
-    kubectl logs <grafana-pod-id> -n otel-demo --tail=50
-    ``` 
-
-    ![Grafana Pod Log](/screenshots/phase1/grafana-pod-log.png)
-
-    - Similarly Retrieving the last 50 log messages from the jaeger pod
-
-    ![Jaeger Pod Log](/screenshots/phase1/jaeger-ui-pod-log.png)
-
-    - Flagd pod logs
-
-    ![FlagD pod log](/screenshots/phase1/flag-d-pod-log.png)
-
 
 - Exported Kubernetes manifest (opentelemetry-demo.yaml).
 
