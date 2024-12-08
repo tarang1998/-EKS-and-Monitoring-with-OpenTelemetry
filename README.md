@@ -399,7 +399,7 @@ Deploy the application by creating and organizing split YAML files, applying the
 
 - Create folders for resource types to organize the split YAML files by resource type (e.g., ConfigMaps, Secrets, Deployments, Services). Ensure the folder structure is logical and reflects the Kubernetes resources being deployed.
 - Apply resources either individually or recursively:
-- Individually apply each file to ensure resources deploy successfully before moving to the
+- Individually apply each file to ensure resources deploy successfully.
 - Alternatively, apply all files recursively from the root folder containing the organized files to deploy everything at
 - Validate resource deployment by checking the status of pods, services, and Debug any issues by reviewing pod logs or describing problematic resources.
 - Compress the organized folder of split YAML files into a ZIP file and include it as part of the
