@@ -484,7 +484,39 @@ Deploy the application by creating and organizing split YAML files, applying the
 
     - Jaeger
 
-        - 
+        - The ServiceAccount resource here is used to associate the correct permissions for Jaeger to interact with Kubernetes resources
+        - The resource Service for jaeger agent is responsible for collecting trace data from applications and sending it to the Jaeger collector
+        
+
+# Phase 6: CI/CD Integration
+ 
+## Objective 
+
+Set up a CI/CD pipeline to automate the build, test, and deployment processes for the application, ensuring a streamlined and efficient development workflow
+
+## Tasks
+ 
+### Set Up CI/CD Pipeline:
+ 
+- Configure a CI/CD pipeline using tools like GitHub Actions or GitLab CI/CD to automate the application deployment
+- Automate the following processes:
+    - Building container images
+    - Running automated tests to validate application
+- Deploying the application to the Kubernetes cluster
+ 
+
+### Enable Rollback Mechanism:
+ 
+- Integrate a rollback mechanism within the pipeline to revert to the last stable deployment in case of
+- Validate the rollback process to ensure minimal downtime and application
+
+### Deliverables
+
+- A fully functional CI/CD pipeline automating build, test, and deployment
+- Clear pipeline configuration files with integration into a container
+- Logs or screenshots showcasing successful builds, tests, deployments, and
+- Validation of rollback functionality ensuring recovery from deployment
+- Confirmation of secure management of sensitive data
  
 
 
