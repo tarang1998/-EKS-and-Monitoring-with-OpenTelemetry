@@ -5,7 +5,7 @@ on:
     branches:
       - main # Adjust to your default branch if necessary
     paths:
-      - 'opentelemetry-demo/src**'
+      - 'open-telemetry-demo/src/**'
       - 'phase2/deployment/open-telemetry/**'
   workflow_dispatch:  # Optional: allows manual triggering
 
