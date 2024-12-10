@@ -46,12 +46,20 @@ jobs:
             docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
           fi
 
-          # # Build and push cart service if changed
+          # Build and push cart service if changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/cartservice/'; then
             echo "Building and pushing cart service..."
             docker build -f ./open-telemetry-demo/src/cartservice/src/Dockerfile -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest ./open-telemetry-demo
             docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
           fi
+
+          # Build and push front-end service if changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/frontend/'; then
+            echo "Building and pushing front end service..."
+            docker build -f ./open-telemetry-demo/src/frontend/Dockerfile -t ${{ secrets.ECR_REPOSITORY_FRONTEND_SERVICE}}:latest ./open-telemetry-demo
+            docker push ${{ secrets.ECR_REPOSITORY_FRONTEND_SERVICE }}:latest
+          fi
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -103,6 +111,13 @@ jobs:
             kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
           fi
 
+          # Deploy frontend service if changed 
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/frontend/'; then
+            echo "Deploying frontend service..."
+            kubectl set image deployment/opentelemetry-demo-frontend frontend=${{ secrets.ECR_REPOSITORY_FRONTEND_SERVICE }}:latest --namespace otel-demo
+            kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
+          fi
+
 
       - name: Restart Pods 
         run: |
@@ -119,4 +134,9 @@ jobs:
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/cartservice/'; then
             echo "Restarting cart service pods"
             kubectl rollout restart deployment/opentelemetry-demo-cartservice --namespace otel-demo
+          fi
+
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/frontend/'; then
+            echo "Restarting frontend pods"
+            kubectl rollout restart deployment/opentelemetry-demo-frontend --namespace otel-demo
           fi
