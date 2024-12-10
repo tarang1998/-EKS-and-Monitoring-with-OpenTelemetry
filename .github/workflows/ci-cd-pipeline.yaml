@@ -129,6 +129,27 @@ jobs:
             kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
           fi
 
+          # Update Kubernetes configurations if YAML files in ad-service are changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/.*\.yaml$'; then
+            echo "Updating Kubernetes configurations..."
+            kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/ --recursive --namespace otel-demo
+            kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
+          fi
+
+          # Update Kubernetes configurations if YAML files in cart-service are changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/.*\.yaml$'; then
+            echo "Updating Kubernetes configurations..."
+            kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/ --recursive --namespace otel-demo
+            kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
+          fi
+
+          # Update Kubernetes configurations if YAML files in front end are changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$'; then
+            echo "Updating Kubernetes configurations..."
+            kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/ --recursive --namespace otel-demo
+            kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
+          fi
+
 
       - name: Restart Pods 
         run: |
