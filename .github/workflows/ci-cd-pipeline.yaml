@@ -33,21 +33,21 @@ jobs:
       - name: Build and push Docker images
         run: |
           # Build and push Image for accounting service if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/accountingservice/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/accountingservice/'; then
             echo "Building and pushing accounting service..."
             docker build -f ./open-telemetry-demo/src/accountingservice/Dockerfile -t ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest ./open-telemetry-demo
             docker push ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
           fi
 
           # # Build and push adservice if changed
-          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/adservice/'; then
           #   echo "Building and pushing ad service..."
           #   docker build -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest adservice
           #   docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
           # fi
 
           # # Build and push cart service if changed
-          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/cartservice/'; then
           #   echo "Building and pushing cart service..."
           #   docker build -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest adservice
           #   docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
@@ -84,14 +84,14 @@ jobs:
         run: |
           # Deploy accounting service if changed
 
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/accountingservice/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/accountingservice/'; then
             echo "Deploying accounting service..."
             kubectl set image deployment/opentelemetry-demo-accountingservice accountingservice=${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
             kubectl rollout status deployment/opentelemetry-demo-accountingservice
           fi
 
           # # Deploy adservice if changed
-          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/adservice/ then
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q open-telemetry-demo/src/adservice/ then
           #   echo "Deploying ad service..."
           #   kubectl set image deployment/opentelemetry-demo-adservice adservice=${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
           #   kubectl rollout status deployment/opentelemetry-demo-adservice
