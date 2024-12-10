@@ -78,11 +78,12 @@ jobs:
 
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --name cluster --region ${{ secrets.AWS_REGION }}
+          aws eks update-kubeconfig --name openTelemetryCluster --region ${{ secrets.AWS_REGION }}
 
       - name: Deploy to EKS
         run: |
           # Deploy accounting service if changed
+
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/accountingservice/'; then
             echo "Deploying accounting service..."
             kubectl set image deployment/opentelemetry-demo-accountingservice accountingservice=${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
@@ -91,14 +92,14 @@ jobs:
 
           # Deploy adservice if changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/adservice/ then
-            echo "Deploying adservice..."
+            echo "Deploying ad service..."
             kubectl set image deployment/opentelemetry-demo-adservice adservice=${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
             kubectl rollout status deployment/opentelemetry-demo-adservice
           fi
 
           # Deploy cart service if changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/cartservice/ then
-            echo "Deploying adservice..."
+            echo "Deploying cart service..."
             kubectl set image deployment/opentelemetry-demo-cartservice cartservice=${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
             kubectl rollout status deployment/opentelemetry-demo-cartservice
           fi
@@ -111,11 +112,11 @@ jobs:
           fi
 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
-            echo "Restarting adservice pods"
+            echo "Restarting ad service pods"
             kubectl rollout restart deployment/opentelemetry-demo-adservice
           fi
 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
-            echo "Restarting cartservice pods"
+            echo "Restarting cart service pods"
             kubectl rollout restart deployment/opentelemetry-demo-cartservice
           fi
