@@ -513,19 +513,89 @@ Deploy the application by creating and organizing split YAML files, applying the
 
 - A short report explaining the purpose of each resource, steps followed during deployment, and resolutions to any challenges Note : Manage the namespaces properly while deploying the yaml files
 
-    - OpenSearch
+    - Reasoning Behind Splitting YAML Files by Application Level
 
-        - The resources provided for this service include a PodDisruptionBudget, ConfigMap, two Services, and a StatefulSet.
-        - PodDisruptionBudget ensures OpenSearch is highly available during activities like scaling or updates by defining the minimum no of pods that must be available
-        - The configMap contains the OpenSearch configuration file defining essential settings for the Opensearch cluster.
-        - The ClusterIP service provides internal access to OpenSearch
-        - Headless Service ??
-        - Stateful Set ??
+        The decision to split YAML files by application level reflects an organizational strategy that aligns deployment artifacts with application-specific resources. This approach offers several key benefits:
 
-    - Jaeger
+        - In a microservices-based architecture, each service operates independently and has its own deployment lifecycle. By splitting YAML files for each microservice, we ensure that each service’s Kubernetes configuration is managed separately. This approach allows for each microservice to be deployed, scaled, or updated independently, reducing the complexity of dealing with monolithic configurations.
 
-        - The ServiceAccount resource here is used to associate the correct permissions for Jaeger to interact with Kubernetes resources
-        - The resource Service for jaeger agent is responsible for collecting trace data from applications and sending it to the Jaeger collector
+        - This selective deployment reduces downtime and the risk of impacting other services in the system. It also improves the overall deployment speed since only the necessary resources are updated.
+
+        - When a problem occurs within a specific microservice, it is easier to isolate and debug because the deployment artifacts are specific to that service
+
+        - With smaller, service-specific YAML files, the chances of misconfiguring a microservice by accidentally affecting others are minimized.
+
+        
+
+
+    - Purpose of Each Resource
+
+        - Namespace YAML:
+        Defines logical segregation for resources, enabling streamlined management and isolation between applications or teams.
+
+        - OpenTelemetry:
+
+            - OpenSearch: Manages data storage and retrieval for telemetry data using StatefulSets for persistence.
+
+            - Jaeger: Provides tracing capabilities to debug distributed applications.
+
+            - OpenTelemetry Collector: Gathers metrics and traces from services for analysis.
+
+            - Prometheus: A metrics-based monitoring tool.
+
+            - Grafana: Visualization of telemetry data and metrics.
+
+            - WebApplication:
+
+                - Core: Contains Kafka and validation services.
+
+                - Backend: Includes microservices like accounting, ad, cart, etc., for functional requirements.
+                
+                - Frontend: Handles user-facing components with a proxy for load balancing.
+                
+                
+    - Steps Followed During Deployment
+        
+        - Organizing Resources:
+
+        Resources are grouped by their function or application to ensure logical separation.
+        Example: All OpenTelemetry-related files (e.g., ConfigMaps, Deployments) are placed under open-telemetry for clarity.
+        Applying YAML Files:
+
+        Individual Application:
+        Each YAML file is applied independently to validate its deployment in isolation. For instance:
+        Apply namespace.yaml first to ensure all resources deploy in the correct namespace.
+        Deploy ConfigMaps and Secrets before Deployments and Services to satisfy dependencies.
+        Recursive Deployment:
+        A batch deployment is achieved by applying all YAML files recursively from the root directory if individual validation is not required.
+        Validation:
+
+    Checked the status of resources (kubectl get pods, kubectl get services) to ensure successful deployment.
+    Used kubectl logs and kubectl describe commands for debugging failed deployments.
+    Zipping Deployment Artifacts:
+
+    Compressed the entire folder for storage, version control, or portability.
+    Advantages of Splitting at Application Level
+    Simplified Debugging:
+    Errors in one service (e.g., Jaeger) can be resolved by reapplying its specific YAML files without affecting other applications.
+    Modularity and Reusability:
+    Components like ConfigMaps or Services can be reused across environments (e.g., staging, production).
+    Parallel Development and Deployment:
+    Teams working on different applications can operate independently without conflict.
+    Enhanced Scalability:
+    Facilitates scaling individual microservices or applications based on demand.
+    Challenges and Resolutions
+    Dependency Issues:
+    Services failing due to unavailable ConfigMaps or Secrets.
+    Resolution: Ensured ConfigMaps and Secrets were deployed before dependent resources.
+    StatefulSet Failures (OpenSearch):
+    Pods stuck in Pending state due to insufficient storage.
+    Resolution: Adjusted PersistentVolumeClaim configurations to match available storage.
+    ClusterRole Binding Errors:
+    Missing permissions for service accounts.
+    Resolution: Updated ClusterRoleBinding to correctly reference service accounts.
+    Conclusion
+    This structured approach ensures clear separation of concerns, facilitates smoother deployments, and enables efficient management of microservices. The folder hierarchy mirrors the application architecture, making it intuitive for developers and DevOps engineers to manage and troubleshoot resources
         
 
 # Phase 6: CI/CD Integration
