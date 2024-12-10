@@ -39,19 +39,19 @@ jobs:
             docker push ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
           fi
 
-          # Build and push adservice if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
-            echo "Building and pushing ad service..."
-            docker build -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest adservice
-            docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
-          fi
+          # # Build and push adservice if changed
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
+          #   echo "Building and pushing ad service..."
+          #   docker build -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest adservice
+          #   docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
+          # fi
 
-          # Build and push cart service if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
-            echo "Building and pushing cart service..."
-            docker build -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest adservice
-            docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
-          fi
+          # # Build and push cart service if changed
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
+          #   echo "Building and pushing cart service..."
+          #   docker build -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest adservice
+          #   docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
+          # fi
 
   deploy:
     runs-on: ubuntu-latest
@@ -90,19 +90,19 @@ jobs:
             kubectl rollout status deployment/opentelemetry-demo-accountingservice
           fi
 
-          # Deploy adservice if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/adservice/ then
-            echo "Deploying ad service..."
-            kubectl set image deployment/opentelemetry-demo-adservice adservice=${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
-            kubectl rollout status deployment/opentelemetry-demo-adservice
-          fi
+          # # Deploy adservice if changed
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/adservice/ then
+          #   echo "Deploying ad service..."
+          #   kubectl set image deployment/opentelemetry-demo-adservice adservice=${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
+          #   kubectl rollout status deployment/opentelemetry-demo-adservice
+          # fi
 
-          # Deploy cart service if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/cartservice/ then
-            echo "Deploying cart service..."
-            kubectl set image deployment/opentelemetry-demo-cartservice cartservice=${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
-            kubectl rollout status deployment/opentelemetry-demo-cartservice
-          fi
+          # # Deploy cart service if changed
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q opentelemetry-demo/src/cartservice/ then
+          #   echo "Deploying cart service..."
+          #   kubectl set image deployment/opentelemetry-demo-cartservice cartservice=${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
+          #   kubectl rollout status deployment/opentelemetry-demo-cartservice
+          # fi
 
       - name: Restart Pods 
         run: |
@@ -111,12 +111,12 @@ jobs:
             kubectl rollout restart deployment/opentelemetry-demo-accountingservice
           fi
 
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
-            echo "Restarting ad service pods"
-            kubectl rollout restart deployment/opentelemetry-demo-adservice
-          fi
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
+          #   echo "Restarting ad service pods"
+          #   kubectl rollout restart deployment/opentelemetry-demo-adservice
+          # fi
 
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
-            echo "Restarting cart service pods"
-            kubectl rollout restart deployment/opentelemetry-demo-cartservice
-          fi
+          # if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
+          #   echo "Restarting cart service pods"
+          #   kubectl rollout restart deployment/opentelemetry-demo-cartservice
+          # fi
