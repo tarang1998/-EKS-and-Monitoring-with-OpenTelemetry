@@ -104,8 +104,6 @@ jobs:
           fi
 
 
-          
-
       - name: Restart Pods 
         run: |
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/accountingservice/'; then
@@ -120,5 +118,5 @@ jobs:
 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/cartservice/'; then
             echo "Restarting cart service pods"
-            kubectl rollout restart deployment/opentelemetry-demo-cartservice
+            kubectl rollout restart deployment/opentelemetry-demo-cartservice --namespace otel-demo
           fi
