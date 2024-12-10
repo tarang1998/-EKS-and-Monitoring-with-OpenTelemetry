@@ -68,7 +68,7 @@ public class ValkeyCartStore : ICartStore
                 return;
             }
 
-            _logger.LogDebug("Connecting to Redis: {_connectionString}", _connectionString);
+            _logger.LogDebug("Log : Connecting to Redis: {_connectionString}", _connectionString);
             _redis = ConnectionMultiplexer.Connect(_redisConnectionOptions);
 
             if (_redis == null || !_redis.IsConnected)

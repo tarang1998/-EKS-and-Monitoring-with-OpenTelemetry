@@ -550,7 +550,7 @@ Deploy the application by creating and organizing split YAML files, applying the
                 - Core: Contains Kafka and validation services.
 
                 - Backend: Includes microservices like accounting, ad, cart, etc., for functional requirements.
-                
+
                 - Frontend: Handles user-facing components with a proxy for load balancing.
                 
                 
@@ -640,3 +640,6 @@ Accounting service pipeline
  
 
 
+https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12255175216/job/34187702749
+
+https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12265787202/job/34222655321
