@@ -448,13 +448,13 @@ Deploy the application by creating and organizing split YAML files, applying the
         - Deploy the namespace.yaml file 
 
         ```
-        kubectl apply -f namespace.yaml
+        kubectl apply -f /EKS-and-Monitoring-with-OpenTelemetry/phase2/deployment/namespace.yaml
         ```
 
         - Apply all the resources recursively
 
         ```
-        kubectl apply -f ./open-telemetry --recursive --namespace otel-demo
+        kubectl apply -f /EKS-and-Monitoring-with-OpenTelemetry/phase2/deployment/open-telemetry --recursive --namespace otel-demo
         ```
 - Validate resource deployment by checking the status of pods, services, and Debug any issues by reviewing pod logs or describing problematic resources.
 
@@ -562,6 +562,7 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
 
         
+docker build -f ./accountingservice/Dockerfile -t <image_name>:<tag> ./accountingservice
 
 
 
