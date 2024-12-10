@@ -30,7 +30,7 @@ spec:
       containers:
         - name: frontend
           image: 'ghcr.io/open-telemetry/demo:1.12.0-frontend'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             
             - containerPort: 8080
