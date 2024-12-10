@@ -6,17 +6,34 @@ metadata:
   region: us-east-1
   version: "1.31" # The version of kubernetes to use  
    
+
+iam:
+  withOIDC: true
+  attachPolicyARNs:
+    - arn:aws:iam::aws:policy/AdministratorAccess
+
+
 iamIdentityMappings:
   - arn: arn:aws:iam::448049797968:role/EKSClientRole
     groups:
       - system:masters
     username: admin
     noDuplicateARNs: true
+    
   - arn: arn:aws:iam::448049797968:user/root  
     groups:
       - system:masters 
     username: root
     noDuplicateARNs: true
+
+  - arn: arn:aws:iam::448049797968:user/cli-user  
+    groups:
+      - system:masters 
+    username: cli-root-user
+    noDuplicateARNs: true
+
+  - account: "448049797968" 
+
 
 managedNodeGroups:
   - name: ng-1
