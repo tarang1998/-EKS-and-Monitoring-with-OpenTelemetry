@@ -30,28 +30,28 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-        - name: Build and push Docker images
-          run: |
-            # Build and push Image for accounting service if changed
-            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/accountingservice/'; then
-              echo "Building and pushing accounting service..."
-              docker build -f ./open-telemetry-demo/src/accountingservice/Dockerfile -t ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest ./open-telemetry-demo
-              docker push ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
-            fi
-
-          # Build and push adservice if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
-            echo "Building and pushing ad service..."
-            docker build -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest adservice
-            docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
+      - name: Build and push Docker images
+        run: |
+          # Build and push Image for accounting service if changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/accountingservice/'; then
+            echo "Building and pushing accounting service..."
+            docker build -f ./open-telemetry-demo/src/accountingservice/Dockerfile -t ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest ./open-telemetry-demo
+            docker push ${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest
           fi
 
-          # Build and push cart service if changed
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
-            echo "Building and pushing cart service..."
-            docker build -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest adservice
-            docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
-          fi
+        # Build and push adservice if changed
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/adservice/'; then
+          echo "Building and pushing ad service..."
+          docker build -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest adservice
+          docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
+        fi
+
+        # Build and push cart service if changed
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^opentelemetry-demo/src/cartservice/'; then
+          echo "Building and pushing cart service..."
+          docker build -t ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest adservice
+          docker push ${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest
+        fi
 
   deploy:
     runs-on: ubuntu-latest
