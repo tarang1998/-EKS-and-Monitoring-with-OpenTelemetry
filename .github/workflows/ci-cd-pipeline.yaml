@@ -42,8 +42,7 @@ jobs:
           # Build and push adservice if changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/adservice/'; then
             echo "Building and pushing ad service..." 
-            docker $(cat ./open-telemetry-demo/.env | sed 's/^/--build-arg /' | xargs)  build -f ./open-telemetry-demo/src/adservice/Dockerfile -t 448049797968.dkr.ecr.us-east-1.amazonaws.com/opentelemetry/adservice:latest ./open-telemetry-demo
-            # docker build -f ./open-telemetry-demo/src/adservice/Dockerfile -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest ./open-telemetry-demo
+            docker build -f ./open-telemetry-demo/src/adservice/Dockerfile -t ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest ./open-telemetry-demo
             docker push ${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest
           fi
 
