@@ -9,17 +9,14 @@ metadata:
 
 iam:
   withOIDC: true
-  attachPolicyARNs:
-    - arn:aws:iam::aws:policy/AdministratorAccess
-
-
+  
 iamIdentityMappings:
   - arn: arn:aws:iam::448049797968:role/EKSClientRole
     groups:
       - system:masters
     username: admin
     noDuplicateARNs: true
-    
+
   - arn: arn:aws:iam::448049797968:user/root  
     groups:
       - system:masters 
