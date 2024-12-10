@@ -90,6 +90,7 @@ jobs:
 
       - name: Deploy to EKS
         run: |
+
           # Deploy accounting service if changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/accountingservice/'; then
             echo "Deploying accounting service..."
@@ -116,6 +117,16 @@ jobs:
             echo "Deploying frontend service..."
             kubectl set image deployment/opentelemetry-demo-frontend frontend=${{ secrets.ECR_REPOSITORY_FRONTEND_SERVICE }}:latest --namespace otel-demo
             kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
+          fi
+
+      - name: Update kubectl configurations 
+        run: |
+
+          # Update Kubernetes configurations if YAML files in accounting-service are changed
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$'; then
+            echo "Updating Kubernetes configurations..."
+            kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/ --recursive --namespace otel-demo
+            kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
           fi
 
 
