@@ -99,7 +99,7 @@ public final class AdService {
             .addService(healthMgr.getHealthService())
             .build()
             .start();
-    logger.info("Log : Ad service started, listening on " + port);
+    logger.info("Status : Ad service started, listening on " + port);
     Runtime.getRuntime()
         .addShutdownHook(
             new Thread(
