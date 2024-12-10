@@ -30,7 +30,7 @@ spec:
       containers:
         - name: cartservice
           image: 'ghcr.io/open-telemetry/demo:1.12.0-cartservice'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             
             - containerPort: 8080

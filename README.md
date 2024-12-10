@@ -639,7 +639,13 @@ Accounting service pipeline
 
  
 
-
+accounting-service 
 https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12255175216/job/34187702749
 
+
+ad -service
 https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12265787202/job/34222655321
+
+
+cart service
+https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266214488

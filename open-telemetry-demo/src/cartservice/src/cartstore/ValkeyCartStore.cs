@@ -68,7 +68,7 @@ public class ValkeyCartStore : ICartStore
                 return;
             }
 
-            _logger.LogDebug("Logging : Connecting to Redis: {_connectionString}", _connectionString);
+            _logger.LogDebug("Connecting to Redis: {_connectionString}", _connectionString);
             _redis = ConnectionMultiplexer.Connect(_redisConnectionOptions);
 
             if (_redis == null || !_redis.IsConnected)
@@ -79,7 +79,7 @@ public class ValkeyCartStore : ICartStore
                 throw new ApplicationException("Wasn't able to connect to redis");
             }
 
-            _logger.LogInformation("Logging : Successfully connected to Redis");
+            _logger.LogInformation("Log: Successfully connected to Redis");
             var cache = _redis.GetDatabase();
 
             _logger.LogDebug("Performing small test");
