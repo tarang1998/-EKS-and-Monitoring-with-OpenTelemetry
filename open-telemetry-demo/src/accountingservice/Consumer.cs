@@ -66,7 +66,7 @@ internal class Consumer : IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Status : Order parsing failed:");
+            _logger.LogError(ex, "Order parsing failed:");
         }
     }
 
