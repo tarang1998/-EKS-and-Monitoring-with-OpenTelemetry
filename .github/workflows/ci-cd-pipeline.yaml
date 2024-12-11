@@ -147,40 +147,22 @@ jobs:
 
           # Check if accounting service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/accountingservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$)'; then
-            kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
-            if [ $? -ne 0 ]; then
-              echo "Deployment failed. Rolling back to previous version..."
-              kubectl rollout undo deployment/opentelemetry-demo-accountingservice --namespace otel-demo
-            else
-              echo "Deployment succeeded."
-            fi
+            timeout 150 kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo && echo "Rollout successful. Running success command..." || (echo "Deployment rollout timed out. Running fallback command..." && kubectl rollout undo deployment/opentelemetry-demo-accountingservice --namespace otel-demo)
           fi
 
           # Check if ad service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/adservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/.*\.yaml$)'; then
-            kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
-            if [ $? -ne 0 ]; then
-              echo "Deployment failed. Rolling back to previous version..."
-              kubectl rollout undo deployment/opentelemetry-demo-adservice --namespace otel-demo
-            else
-              echo "Deployment succeeded."
-            fi
+            timeout 150 kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo && echo "Rollout successful. Running success command..." || (echo "Deployment rollout timed out. Running fallback command..." && kubectl rollout undo deployment/opentelemetry-demo-adservice --namespace otel-demo)
           fi
 
           # Check if cart service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/cartservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/.*\.yaml$)'; then
-            kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
-            if [ $? -ne 0 ]; then
-              echo "Deployment failed. Rolling back to previous version..."
-              kubectl rollout undo deployment/opentelemetry-demo-cartservice --namespace otel-demo
-            else
-              echo "Deployment succeeded."
-            fi
+            timeout 150 kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo && echo "Rollout successful. Running success command..." || (echo "Deployment rollout timed out. Running fallback command..." && kubectl rollout undo deployment/opentelemetry-demo-cartservice --namespace otel-demo)
           fi
 
           # Check if frontend service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/frontend/|phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$)'; then
-            timeout 20 kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo && echo "Rollout successful. Running success command..." || (echo "Deployment rollout timed out. Running fallback command..." && kubectl rollout undo deployment/opentelemetry-demo-frontend --namespace otel-demo)
+            timeout 150 kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo && echo "Rollout successful. Running success command..." || (echo "Deployment rollout timed out. Running fallback command..." && kubectl rollout undo deployment/opentelemetry-demo-frontend --namespace otel-demo)
           fi
 
 
