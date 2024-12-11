@@ -515,7 +515,9 @@ Deploy the application by creating and organizing split YAML files, applying the
 
     - Reasoning Behind Splitting YAML Files by Application Level
 
-        The decision to split YAML files by application level reflects an organizational strategy that aligns deployment artifacts with application-specific resources. This approach offers several key benefits:
+        The decision to split YAML files by application level reflects an organizational strategy that aligns deployment artifacts with application-specific resources. 
+        
+        This approach offers several key benefits:
 
         - In a microservices-based architecture, each service operates independently and has its own deployment lifecycle. By splitting YAML files for each microservice, we ensure that each service’s Kubernetes configuration is managed separately. This approach allows for each microservice to be deployed, scaled, or updated independently, reducing the complexity of dealing with monolithic configurations.
 
@@ -525,7 +527,9 @@ Deploy the application by creating and organizing split YAML files, applying the
 
         - With smaller, service-specific YAML files, the chances of misconfiguring a microservice by accidentally affecting others are minimized.
 
-        
+        - Parallel Development and Deployment: Teams working on different applications can operate independently without conflict.
+
+        - Enhanced Scalability: Facilitates scaling individual microservices or applications based on demand.
 
 
     - Purpose of Each Resource
@@ -558,44 +562,32 @@ Deploy the application by creating and organizing split YAML files, applying the
         
         - Organizing Resources:
 
-        Resources are grouped by their function or application to ensure logical separation.
-        Example: All OpenTelemetry-related files (e.g., ConfigMaps, Deployments) are placed under open-telemetry for clarity.
-        Applying YAML Files:
+        Resources are grouped by their function or application to ensure logical separation. The kubectl configuration files are arranged based on the different microservices
 
-        Individual Application:
-        Each YAML file is applied independently to validate its deployment in isolation. For instance:
-        Apply namespace.yaml first to ensure all resources deploy in the correct namespace.
-        Deploy ConfigMaps and Secrets before Deployments and Services to satisfy dependencies.
-        Recursive Deployment:
-        A batch deployment is achieved by applying all YAML files recursively from the root directory if individual validation is not required.
-        Validation:
+        - Applying YAML Files:
 
-    Checked the status of resources (kubectl get pods, kubectl get services) to ensure successful deployment.
-    Used kubectl logs and kubectl describe commands for debugging failed deployments.
-    Zipping Deployment Artifacts:
+            - Individual Application: Each YAML file is applied independently to validate its deployment in isolation.
 
-    Compressed the entire folder for storage, version control, or portability.
-    Advantages of Splitting at Application Level
-    Simplified Debugging:
-    Errors in one service (e.g., Jaeger) can be resolved by reapplying its specific YAML files without affecting other applications.
-    Modularity and Reusability:
-    Components like ConfigMaps or Services can be reused across environments (e.g., staging, production).
-    Parallel Development and Deployment:
-    Teams working on different applications can operate independently without conflict.
-    Enhanced Scalability:
-    Facilitates scaling individual microservices or applications based on demand.
-    Challenges and Resolutions
-    Dependency Issues:
-    Services failing due to unavailable ConfigMaps or Secrets.
-    Resolution: Ensured ConfigMaps and Secrets were deployed before dependent resources.
-    StatefulSet Failures (OpenSearch):
-    Pods stuck in Pending state due to insufficient storage.
-    Resolution: Adjusted PersistentVolumeClaim configurations to match available storage.
-    ClusterRole Binding Errors:
-    Missing permissions for service accounts.
-    Resolution: Updated ClusterRoleBinding to correctly reference service accounts.
-    Conclusion
-    This structured approach ensures clear separation of concerns, facilitates smoother deployments, and enables efficient management of microservices. The folder hierarchy mirrors the application architecture, making it intuitive for developers and DevOps engineers to manage and troubleshoot resources
+            - Recursive Deployment: A batch deployment is achieved by applying all YAML files recursively from the root directory. This is accomplished by the following command : kubectl apply -f /EKS-and-Monitoring-with-OpenTelemetry/phase2/deployment/open-telemetry --recursive --namespace otel-demo
+
+        
+    - Validation:
+
+        - Checked the status of resources (kubectl get pods, kubectl get services) to ensure successful deployment.
+        - Used kubectl logs and kubectl describe commands for debugging failed deployments.
+    
+    - Challenges and Resolutions
+
+        Dependency Issues: Service Deployment failing due to dependencies between the services 
+
+        Resolution: Ensuring certain microservices are deployed first before the others. 
+
+        ClusterRole Binding Errors: Figuring out permission management for IAM Roles and Users, thereby enabling the EKS Client and github action workflow to interact with EKS
+
+        
+    - Conclusion
+
+    This structured approach ensures clear separation of concerns, facilitates smoother deployments, and enables efficient management of microservices. The folder hierarchy mirrors the application architecture, making it intuitive for developers and DevOps engineers to manage and troubleshoot resources.
         
 
 # Phase 6: CI/CD Integration
@@ -662,6 +654,11 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
     - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/deployment.yaml) 
 
     - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/testing.yaml) 
+
+    - ECR Repositories created 
+
+    ![ECR](/screenshots/phase3/ECR.png)
+
 
 
 - Logs or screenshots showcasing successful builds, tests, deployments
