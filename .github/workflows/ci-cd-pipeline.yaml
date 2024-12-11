@@ -150,6 +150,19 @@ jobs:
             kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
           fi
 
+      - name: Check if deployment succeeded
+        run: |
+
+          # Check if accounting service deployment succeeded
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/accountingservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$)'; then
+            kubectl rollout status deployment/opentelemetry-demo-accountingservice
+            if [ $? -ne 0 ]; then
+              echo "Deployment failed. Rolling back to previous version..."
+              kubectl rollout undo deployment/opentelemetry-demo-accountingservice
+            else
+              echo "Deployment succeeded."
+          fi
+
 
       - name: Restart Pods 
         run: |
