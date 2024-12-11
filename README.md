@@ -355,8 +355,6 @@
 
         ![Checkout Service Pod Logs](/screenshots/phase1/checkout-service-pod-logs.png)
 
-        - Currency Services ???
-
         - Email Service 
 
         ![Email Service Pod Logs](/screenshots/phase1/email-service-pod-logs.png)
@@ -368,8 +366,6 @@
         - FrontEnd Proxy Pod Log
 
         ![Frontend Proxy Pod Log](/screenshots/phase1/kubectl-log-frontendproxy.png)
-
-        - Front End Pod Log ??
 
         - Image Service Pod Log
 
@@ -515,11 +511,11 @@ Deploy the application by creating and organizing split YAML files, applying the
 
     - Reasoning Behind Splitting YAML Files by Application Level
 
-        The decision to split YAML files by application level reflects an organizational strategy that aligns deployment artifacts with application-specific resources. 
+        The decision to split YAML files by application level reflects an organizational strategy to manage each individual microservice in an isolated manner.
         
         This approach offers several key benefits:
 
-        - In a microservices-based architecture, each service operates independently and has its own deployment lifecycle. By splitting YAML files for each microservice, we ensure that each service’s Kubernetes configuration is managed separately. This approach allows for each microservice to be deployed, scaled, or updated independently, reducing the complexity of dealing with monolithic configurations.
+        - In a microservices-based architecture, each service operates independently and has its own deployment lifecycle. By splitting YAML files for each microservice, we ensure that each service’s Kubernetes configuration is managed separately. This approach allows for the microservice's to be deployed, scaled, or updated independently, reducing the complexity of dealing with monolithic configurations.
 
         - This selective deployment reduces downtime and the risk of impacting other services in the system. It also improves the overall deployment speed since only the necessary resources are updated.
 
@@ -562,27 +558,24 @@ Deploy the application by creating and organizing split YAML files, applying the
         
         - Organizing Resources:
 
-        Resources are grouped by their function or application to ensure logical separation. The kubectl configuration files are arranged based on the different microservices
+            - Resources are grouped by their function or application to ensure logical separation. The kubectl configuration files are arranged based on the different microservices
 
         - Applying YAML Files:
 
-            - Individual Application: Each YAML file is applied independently to validate its deployment in isolation.
-
             - Recursive Deployment: A batch deployment is achieved by applying all YAML files recursively from the root directory. This is accomplished by the following command : kubectl apply -f /EKS-and-Monitoring-with-OpenTelemetry/phase2/deployment/open-telemetry --recursive --namespace otel-demo
-
         
-    - Validation:
+        - Validation:
 
-        - Checked the status of resources (kubectl get pods, kubectl get services) to ensure successful deployment.
-        - Used kubectl logs and kubectl describe commands for debugging failed deployments.
-    
+            - Checked the status of resources (kubectl get pods, kubectl get services) to ensure successful deployment.
+            - Used kubectl logs and kubectl describe commands for debugging failed deployments.
+        
     - Challenges and Resolutions
 
-        Dependency Issues: Service Deployment failing due to dependencies between the services 
+        - Dependency Issues: Service Deployment failing due to dependencies between the services 
 
-        Resolution: Ensuring certain microservices are deployed first before the others. 
+        - Resolution: Ensuring certain microservices are deployed first before the others. The order of deployment was important as certain services were depended on the other
 
-        ClusterRole Binding Errors: Figuring out permission management for IAM Roles and Users, thereby enabling the EKS Client and github action workflow to interact with EKS
+        - ClusterRole Binding Errors: Figuring out permission management for IAM Roles and Users, thereby enabling the EKS Client and github action workflow to interact with EKS.
 
         
     - Conclusion
@@ -634,7 +627,7 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
             - The status of the rollout is checked.
             - In case of an error, the deployment is rolled back to the previous stable state.
 
-        - testing.yaml : This worflow performs integration test on the entire application whenever a Pull request is pushed and is approved validating that the changes made to the application is working as intended.
+        - testing.yaml : This worflow performs integration test on the entire application whenever a Pull request is pushed and is approved validating that the  application is working as intended after changes are made.
 
 
 - Clear pipeline configuration files with integration into a container
@@ -760,6 +753,8 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
         - The worflow performs test on the microservices 
 
         ![Integration testing](/screenshots/phase3/integrationTesting.png)
+
+        - The Github Workflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12271442097/job/34238330866 
 
 
 
