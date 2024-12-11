@@ -26,17 +26,28 @@ jobs:
       - name: Load environment variables from .env file
         run: |
           cd ./open-telemetry-demo
-          
-          if [ -f .env ]; then
-            # Filter out comments and empty lines, then add each variable to $GITHUB_ENV
-            echo "Reading .env file!"
-            grep -vE '^\s*#|^\s*$' .env | grep -E '^[^=]+=[^=]+$' | while read -r line; do
-              echo "$line" >> $GITHUB_ENV
-            done
-          else
+
+          # Check if the .env file exists
+          if [ ! -f .env ]; then
             echo ".env file not found!"
             exit 1
           fi
+
+          # Read each line from the .env file
+          while IFS='=' read -r key value; do
+            # Skip empty lines and comments (lines starting with '#')
+            if [[ -z "$key" || "$key" =~ ^# ]]; then
+              continue
+            fi
+            
+            echo "Loaded: $key=$value"
+
+            # Export the environment variable
+            export "$key"="$value"
+
+          done < .env
+          
+  
 
       - name: run tracetesting
         run: |
