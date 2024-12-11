@@ -731,36 +731,69 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
         - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266654614/job/34225271565
 
-    - 
+    - Deployement of the accounting service kubectl configuration:
+
+        - Changes made to the accounting service kubectl configuration
+
+        ![Accounting service kubectl configuration](/screenshots/phase3/kubectl-account-service-update.png)
+
+        - Successfull deployment of the updated kubectl configuration
+
+        ![Kubectl configuration Change](/screenshots/phase3/ci-cd-kubectl-change-accounting-service.png)
+
+        - Kubectl services after deployment 
+
+        ![After deployment](/screenshots/phase3/kubectl-accounting-service-pods.png)
+
+
+        - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266787927
         
 
-        
+    - Deployment of the frontend service kubectl configuration:
 
+        - Changes made to the front service kubectl configuration
+
+        ![Frontend service kubectl configuration](/screenshots/phase3/frontend-deployment-update.png)
+
+        - Successfull deployment of the updated kubectl configuration
+
+        ![Kubectl configuration Change](/screenshots/phase3/ci-cd-frontend.png)
+
+        - Kubectl services after deployment 
+
+        ![After deployment](/screenshots/phase3/frontend-pod-replication.png)
+
+
+        - Github Action Worflow :https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266904381
 
 
 - Validation of rollback functionality ensuring recovery from deployment
+
+    - We similulated an error by modifying the image URI in frontend deployment file to an incorrect address
+
+    ![Simulated error](/screenshots/phase3/simulatingImagePullBackOffError.png)
+
+    - EKS try to deploy the configuration, but faces an error
+
+    ![Image Error](/screenshots/phase3/errorWhileDeployment.png)
+
+    - Successful rollback of the kubectl configuration via github actions 
+
+    ![RollBack](/screenshots/phase3/ci-cd-rollout.png)
+
+    - Pod Status after Rollback
+
+    ![Post RollBack Status](/screenshots/phase3/podStatusAfterRollout.png)
+
+    - Github Action Worflow :https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12267909186
+
 - Confirmation of secure management of sensitive data
- 
 
+    - We used github secrets to manage sensitive data instead of exposing the secrets in git 
 
-
-        
-docker build -f ./accountingservice/Dockerfile -t <image_name>:<tag> ./accountingservice
-
-
-Accounting service pipeline
+    ![Git Secrets](/screenshots/phase3/gitSecrets.png)
 
  
 
-accounting-service 
 
 
-ad -service
-
-
-cart service
-
-front end service
-
-accounting-service kubectl change 
-https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266787927
