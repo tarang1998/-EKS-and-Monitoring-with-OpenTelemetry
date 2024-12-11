@@ -113,7 +113,7 @@ run-tests:
 
 .PHONY: run-tracetesting
 run-tracetesting:
-	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) -f docker-compose-tests.yml run traceBasedTests ${SERVICES_TO_TEST}
+	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) -f ./open-telemetry-demo/docker-compose-tests.yml run traceBasedTests ${SERVICES_TO_TEST}
 
 .PHONY: generate-protobuf
 generate-protobuf:
