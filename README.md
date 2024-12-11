@@ -767,8 +767,7 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
     - CI/CD pipeline for integration testing 
 
-
-        ![After deployment](/screenshots/phase3/frontend-pod-replication.png)
+        ![PR Integration testing](/screenshots/phase3/PR-integration-testing.png)
 
 
 - Validation of rollback functionality ensuring recovery from deployment
