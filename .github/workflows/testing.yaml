@@ -3,22 +3,22 @@
 name: Integration Tests
 
 
-# on:
-#   push:
-#     branches:
-#       - main # Adjust to your default branch if necessary
-#   workflow_dispatch:
-  
 on:
-  pull_request_review:
-    types:
-      - submitted
+  push:
+    branches:
+      - main # Adjust to your default branch if necessary
+  workflow_dispatch:
+  
+# on:
+#   pull_request_review:
+#     types:
+#       - submitted
 
 jobs:
   run_tests:
     runs-on: ubuntu-latest
     name: "Run Integration tests"
-    if: github.event.review.state == 'APPROVED'
+    # if: github.event.review.state == 'APPROVED'
     steps:
       - name: check out code
         uses: actions/checkout@v4
