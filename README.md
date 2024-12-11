@@ -638,22 +638,106 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
             
                 - The docker images for those specific microservices whose source codes have been updated are build.
 
-                - The build images are pushed to ECR 
+                - The build images are pushed to ECR.
 
-                - The pushed images are retrieved by EKS and the application pods are updated
+                - The pushed images are retrieved by EKS and the application pods are updated.
 
-                - The status of the rollout is checked 
+                - The status of the rollout is checked.
 
-                - If the deployment fails due to any error, the deployment is rolled back to the previous stable state
+                - If the deployment fails due to any error, the deployment is rolled back to the previous stable state.
 
             If any changes are made to the kubectl configuration of the services the following operations are performed:
 
-                -  
+                - The kubectl configuration of only the updated microservice is reconfigured instead of the whole application.
 
-            
-                
+                - The status of the rollout is checked.
+
+                - In case of an error, the deployment is rolled back to the previous stable state.
+
+        - testing.yaml
+
+
 - Clear pipeline configuration files with integration into a container
-- Logs or screenshots showcasing successful builds, tests, deployments, and
+
+    - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/deployment.yaml) 
+
+    - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/testing.yaml) 
+
+
+- Logs or screenshots showcasing successful builds, tests, deployments
+
+    - Deployement of the accounting service source code :
+
+        - Changes made to the accounting service source code
+
+        ![Accounting Service Source Code](/screenshots/phase3/accountingServiceUpdate.png)
+
+        - Successfull deployment of the accounting service
+
+        ![Accounting Service Deployment](/screenshots/phase3/ci-cd-pipeline-accounting-service.png)
+
+        - Changes reflected in the pod log
+
+        ![Accounting Service Pod Log changes](/screenshots/phase3/accountingservicepodlog.png)
+
+        - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12255175216/job/34187702749
+        
+    - Deployement of the ad service source code :
+
+        - Changes made to the ad service source code
+
+        ![Ad Service Source Code](/screenshots/phase3/adServiceUpdate.png)
+
+        - Successfull deployment of the ad service
+
+        ![Ad Service Deployment](/screenshots/phase3/ci-cd-pipeline-add-service.png)
+
+        - Changes reflected in the pod log
+
+        ![Ad Service Pod Log changes](/screenshots/phase3/adServicePodLog.png)
+
+        - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12265787202/job/34222655321
+        
+
+    - Deployement of the cart service source code :
+
+        - Changes made to the cart service source code
+
+        ![Cart Service Source Code](/screenshots/phase3/cart-service-update.png)
+
+        - Successfull deployment of the cart service
+
+        ![Cart Service Deployment](/screenshots/phase3/cart-service-ci-cd-pipeline.png)
+
+        - Changes reflected in the pod log
+
+        ![Cart Service Pod Log changes](/screenshots/phase3/cart-service-pod-update.png)
+
+        - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266214488
+
+    - Deployement of the frontend service source code  :
+
+        - Changes made to the frontend service source code
+
+        ![Frontend Service Source Code](/screenshots/phase3/front-end-code-change.png)
+
+        - Successfull deployment of the frontend service
+
+        ![Frontend Service Deployment](/screenshots/phase3/ci-cd-frontend.png)
+
+        - Changes reflected in the application
+
+        ![Front end application change](/screenshots/phase3/front-end-change.png)
+
+        - Github Action Worflow : https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266654614/job/34225271565
+
+    - 
+        
+
+        
+
+
+
 - Validation of rollback functionality ensuring recovery from deployment
 - Confirmation of secure management of sensitive data
  
@@ -669,18 +753,14 @@ Accounting service pipeline
  
 
 accounting-service 
-https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12255175216/job/34187702749
 
 
 ad -service
-https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12265787202/job/34222655321
 
 
 cart service
-https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266214488
 
 front end service
-https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266654614/job/34225271565
 
 accounting-service kubectl change 
 https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266787927
