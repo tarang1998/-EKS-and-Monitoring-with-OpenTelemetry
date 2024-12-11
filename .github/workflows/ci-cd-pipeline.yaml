@@ -157,6 +157,7 @@ jobs:
               kubectl rollout undo deployment/opentelemetry-demo-accountingservice --namespace otel-demo
             else
               echo "Deployment succeeded."
+            fi
           fi
 
 
