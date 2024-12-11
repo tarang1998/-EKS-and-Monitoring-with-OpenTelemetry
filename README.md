@@ -636,7 +636,19 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
             If any changes are made to the source code of the microservices the following operations are performed:
             
-                - 
+                - The docker images for those specific microservices whose source codes have been updated are build.
+
+                - The build images are pushed to ECR 
+
+                - The pushed images are retrieved by EKS and the application pods are updated
+
+                - The status of the rollout is checked 
+
+                - If the deployment fails due to any error, the deployment is rolled back to the previous stable state
+
+            If any changes are made to the kubectl configuration of the services the following operations are performed:
+
+                -  
 
             
                 
