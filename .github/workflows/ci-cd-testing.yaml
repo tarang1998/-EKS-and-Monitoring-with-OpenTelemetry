@@ -25,4 +25,4 @@ jobs:
 
       - name: run tracetesting
         run: |
-          cd ./open-telemetry-demo && make build && make run-tracetesting
+          cd ./open-telemetry-demo && make build && docker system prune -f && make run-tracetesting
