@@ -95,28 +95,24 @@ jobs:
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/accountingservice/'; then
             echo "Deploying accounting service..."
             kubectl set image deployment/opentelemetry-demo-accountingservice accountingservice=${{ secrets.ECR_REPOSITORY_ACCOUNTING_SERVICE }}:latest --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
           fi
 
           # Deploy ad service if changed 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/adservice/'; then
             echo "Deploying ad service..."
             kubectl set image deployment/opentelemetry-demo-adservice adservice=${{ secrets.ECR_REPOSITORY_AD_SERVICE }}:latest --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
           fi
 
           # Deploy cart service if changed 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/cartservice/'; then
             echo "Deploying cart service..."
             kubectl set image deployment/opentelemetry-demo-cartservice cartservice=${{ secrets.ECR_REPOSITORY_CART_SERVICE }}:latest --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
           fi
 
           # Deploy frontend service if changed 
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^open-telemetry-demo/src/frontend/'; then
             echo "Deploying frontend service..."
             kubectl set image deployment/opentelemetry-demo-frontend frontend=${{ secrets.ECR_REPOSITORY_FRONTEND_SERVICE }}:latest --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
           fi
 
       - name: Update kubectl configurations 
@@ -126,28 +122,28 @@ jobs:
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/ --recursive --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
+            # kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in ad-service are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/ --recursive --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
+            # kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in cart-service are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/ --recursive --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
+            # kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in front end are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/ --recursive --namespace otel-demo
-            kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
+            # kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
           fi
 
       - name: Check if deployment succeeded
@@ -155,10 +151,10 @@ jobs:
 
           # Check if accounting service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/accountingservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$)'; then
-            kubectl rollout status deployment/opentelemetry-demo-accountingservice
+            kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
             if [ $? -ne 0 ]; then
               echo "Deployment failed. Rolling back to previous version..."
-              kubectl rollout undo deployment/opentelemetry-demo-accountingservice
+              kubectl rollout undo deployment/opentelemetry-demo-accountingservice --namespace otel-demo
             else
               echo "Deployment succeeded."
           fi
