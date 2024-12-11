@@ -623,6 +623,23 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 ### Deliverables
 
 - A fully functional CI/CD pipeline automating build, test, and deployment
+
+    - Created 2 CI/CD pipelines:
+
+        - deployment.yaml
+
+            This workflow watches for any changes in the following folders when they are pushed into the main branch 
+
+                - 'open-telemetry-demo/src/**' : The subfolders within this contains the source code for the individual microservices 
+
+                - 'phase2/deployment/open-telemetry/**' : The subfolders within this contains the kubectl configurations for all the services 
+
+            If any changes are made to the source code of the microservices the following operations are performed:
+            
+                - 
+
+            
+                
 - Clear pipeline configuration files with integration into a container
 - Logs or screenshots showcasing successful builds, tests, deployments, and
 - Validation of rollback functionality ensuring recovery from deployment
