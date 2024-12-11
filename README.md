@@ -649,3 +649,9 @@ https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs
 
 cart service
 https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266214488
+
+front end service
+https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266654614/job/34225271565
+
+accounting-service kubectl change 
+https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266787927
