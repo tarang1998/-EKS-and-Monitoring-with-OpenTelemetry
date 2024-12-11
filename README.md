@@ -604,13 +604,13 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 - Automate the following processes:
     - Building container images
     - Running automated tests to validate application
-- Deploying the application to the Kubernetes cluster
+    - Deploying the application to the Kubernetes cluster
  
 
 ### Enable Rollback Mechanism:
  
-- Integrate a rollback mechanism within the pipeline to revert to the last stable deployment in case of
-- Validate the rollback process to ensure minimal downtime and application
+- Integrate a rollback mechanism within the pipeline to revert to the last stable deployment in case of failure.
+- Validate the rollback process to ensure minimal downtime and application.
 
 ### Deliverables
 
@@ -618,48 +618,34 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
     - Created 2 CI/CD pipelines:
 
-        - deployment.yaml
-
-            This workflow watches for any changes in the following folders when they are pushed into the main branch 
-
-                - 'open-telemetry-demo/src/**' : The subfolders within this contains the source code for the individual microservices 
-
-                - 'phase2/deployment/open-telemetry/**' : The subfolders within this contains the kubectl configurations for all the services 
+        - deployment.yaml : This workflow watches for any changes in the following folders when they are pushed into the main branch
+            - 'open-telemetry-demo/src/**' : The subfolders within this contains the source code for the individual microservices 
+            - 'phase2/deployment/open-telemetry/**' : The subfolders within this contains the kubectl configurations for all the services 
 
             If any changes are made to the source code of the microservices the following operations are performed:
-            
-                - The docker images for those specific microservices whose source codes have been updated are build.
-
-                - The build images are pushed to ECR.
-
-                - The pushed images are retrieved by EKS and the application pods are updated.
-
-                - The status of the rollout is checked.
-
-                - If the deployment fails due to any error, the deployment is rolled back to the previous stable state.
+            - The docker images for those specific microservices whose source codes have been updated are build.
+            - The build images are pushed to ECR.
+            - The pushed images are retrieved by EKS and the application pods are updated.
+            - The status of the rollout is checked.
+            - If the deployment fails due to any error, the deployment is rolled back to the previous stable state.
 
             If any changes are made to the kubectl configuration of the services the following operations are performed:
+            - The kubectl configuration of only the updated microservice is reconfigured instead of the whole application.
+            - The status of the rollout is checked.
+            - In case of an error, the deployment is rolled back to the previous stable state.
 
-                - The kubectl configuration of only the updated microservice is reconfigured instead of the whole application.
-
-                - The status of the rollout is checked.
-
-                - In case of an error, the deployment is rolled back to the previous stable state.
-
-        - testing.yaml
-
-                - This worflow performs integration test on the entire application whenever a Pull request is pushed and is approved validating that the application is working     
+        - testing.yaml : This worflow performs integration test on the entire application whenever a Pull request is pushed and is approved validating that the changes made to the application is working as intended.
 
 
 - Clear pipeline configuration files with integration into a container
 
     - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/deployment.yaml) 
 
-    - The configuration file for deployment.yaml : [deployment.yaml](.github/workflows/testing.yaml) 
+    - The configuration file for testing.yaml : [testing.yaml](.github/workflows/testing.yaml) 
 
     - ECR Repositories created 
 
-    ![ECR](/screenshots/phase3/ECR.png)
+        ![ECR](/screenshots/phase3/ECR.png)
 
 
 
@@ -767,7 +753,14 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
     - CI/CD pipeline for integration testing 
 
+        - The workflow starts when a PR request is approved 
+
         ![PR Integration testing](/screenshots/phase3/PR-integration-testing.png)
+
+        - The worflow performs test on the microservices 
+
+        ![Integration testing](/screenshots/phase3/integrationTesting.png)
+
 
 
 - Validation of rollback functionality ensuring recovery from deployment
@@ -776,7 +769,7 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
     ![Simulated error](/screenshots/phase3/simulatingImagePullBackOffError.png)
 
-    - EKS try to deploy the configuration, but faces an error
+    - EKS tries to deploy the configuration, but faces an error
 
     ![Image Error](/screenshots/phase3/errorWhileDeployment.png)
 
