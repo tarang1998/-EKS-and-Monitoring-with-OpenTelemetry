@@ -122,28 +122,24 @@ jobs:
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/accounting-service/ --recursive --namespace otel-demo
-            # kubectl rollout status deployment/opentelemetry-demo-accountingservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in ad-service are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/ --recursive --namespace otel-demo
-            # kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in cart-service are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/ --recursive --namespace otel-demo
-            # kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
           fi
 
           # Update Kubernetes configurations if YAML files in front end are changed
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$'; then
             echo "Updating Kubernetes configurations..."
             kubectl apply -f phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/ --recursive --namespace otel-demo
-            # kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
           fi
 
       - name: Check if deployment succeeded
@@ -155,6 +151,39 @@ jobs:
             if [ $? -ne 0 ]; then
               echo "Deployment failed. Rolling back to previous version..."
               kubectl rollout undo deployment/opentelemetry-demo-accountingservice --namespace otel-demo
+            else
+              echo "Deployment succeeded."
+            fi
+          fi
+
+          # Check if ad service deployment succeeded
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/adservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/ad-service/.*\.yaml$)'; then
+            kubectl rollout status deployment/opentelemetry-demo-adservice --namespace otel-demo
+            if [ $? -ne 0 ]; then
+              echo "Deployment failed. Rolling back to previous version..."
+              kubectl rollout undo deployment/opentelemetry-demo-adservice --namespace otel-demo
+            else
+              echo "Deployment succeeded."
+            fi
+          fi
+
+          # Check if cart service deployment succeeded
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/cartservice/|phase2/deployment/open-telemetry/6-webApplication/2-backend/cart-service/.*\.yaml$)'; then
+            kubectl rollout status deployment/opentelemetry-demo-cartservice --namespace otel-demo
+            if [ $? -ne 0 ]; then
+              echo "Deployment failed. Rolling back to previous version..."
+              kubectl rollout undo deployment/opentelemetry-demo-cartservice --namespace otel-demo
+            else
+              echo "Deployment succeeded."
+            fi
+          fi
+
+          # Check if frontend service deployment succeeded
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/frontend/|phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$)'; then
+            kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
+            if [ $? -ne 0 ]; then
+              echo "Deployment failed. Rolling back to previous version..."
+              kubectl rollout undo deployment/opentelemetry-demo-frontend --namespace otel-demo
             else
               echo "Deployment succeeded."
             fi
