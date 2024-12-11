@@ -181,7 +181,11 @@ jobs:
           # Check if frontend service deployment succeeded
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -qE '^(open-telemetry-demo/src/frontend/|phase2/deployment/open-telemetry/6-webApplication/3-frontend/1-frontend-service/.*\.yaml$)'; then
             timeout 150 kubectl rollout status deployment/opentelemetry-demo-frontend --namespace otel-demo
-            if [ $? -ne 0 ]; then
+             # Check the exit status of the timeout command
+            if [ $? -eq 124 ]; then
+              echo "Deployment timed out. Rolling back to previous version..."
+              kubectl rollout undo deployment/opentelemetry-demo-frontend --namespace otel-demo
+            elif [ $? -ne 0 ]; then
               echo "Deployment failed. Rolling back to previous version..."
               kubectl rollout undo deployment/opentelemetry-demo-frontend --namespace otel-demo
             else
