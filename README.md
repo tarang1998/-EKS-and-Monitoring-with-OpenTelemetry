@@ -648,6 +648,8 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
         - testing.yaml
 
+                - This worflow performs integration test on the entire application whenever a Pull request is pushed and is approved validating that the application is working     
+
 
 - Clear pipeline configuration files with integration into a container
 
@@ -762,6 +764,11 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
 
 
         - Github Action Worflow :https://github.com/tarang1998/EKS-and-Monitoring-with-OpenTelemetry/actions/runs/12266904381
+
+    - CI/CD pipeline for integration testing 
+
+
+        ![After deployment](/screenshots/phase3/frontend-pod-replication.png)
 
 
 - Validation of rollback functionality ensuring recovery from deployment
