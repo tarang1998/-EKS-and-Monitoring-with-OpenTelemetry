@@ -26,10 +26,7 @@ jobs:
       - name: Load environment variables from .env file
         run: |
           cd ./open-telemetry-demo
-          if [ ! -d "./open-telemetry-demo" ]; then
-            echo "Directory './open-telemetry-demo' not found!"
-            exit 1
-          fi
+          
           if [ -f .env ]; then
             # Filter out comments and empty lines, then add each variable to $GITHUB_ENV
             echo "Reading .env file!"
