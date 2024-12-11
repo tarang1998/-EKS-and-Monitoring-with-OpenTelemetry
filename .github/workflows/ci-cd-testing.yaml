@@ -25,4 +25,4 @@ jobs:
 
       - name: run tracetesting
         run: |
-          make build -f ./open-telemetry-demo/Makefile ./open-telemetry-demo && make run-tracetesting
+          make -f ./open-telemetry-demo/Makefile build && make -f ./open-telemetry-demo/Makefile run-tracetesting
