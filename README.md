@@ -615,6 +615,9 @@ Set up a CI/CD pipeline to automate the build, test, and deployment processes fo
             - 'open-telemetry-demo/src/**' : The subfolders within this contains the source code for the individual microservices 
             - 'phase2/deployment/open-telemetry/**' : The subfolders within this contains the kubectl configurations for all the services 
 
+            The workflow currently checks for changes in the following microservices : accounting-service, ad-service, cart-service and frontend.
+            However it could be extended to include all the microservices.
+
             If any changes are made to the source code of the microservices the following operations are performed:
             - The docker images for those specific microservices whose source codes have been updated are build.
             - The build images are pushed to ECR.
