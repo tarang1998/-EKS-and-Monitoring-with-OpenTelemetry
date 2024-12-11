@@ -2,10 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 name: Integration Tests
 
+
 on:
-  pull_request_review:
-    types:
-      - submitted
+  push:
+    branches:
+      - main # Adjust to your default branch if necessary
+  workflow_dispatch:
+  
+# on:
+#   pull_request_review:
+#     types:
+#       - submitted
 
 jobs:
   run_tests:
@@ -18,4 +25,4 @@ jobs:
 
       - name: run tracetesting
         run: |
-          make -f ./open-telemetry/Makefile build && make run-tracetesting
+          make -f ./open-telemetry-demo/Makefile build && make run-tracetesting
